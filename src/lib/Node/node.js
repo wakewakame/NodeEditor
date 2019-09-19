@@ -1,4 +1,5 @@
 import { HydrangeaJS } from "../HydrangeaJS/src/main.js";
+import { Component } from "./Component/Component.js";
 
 export const Applet = class {
 	constructor(canvas) {

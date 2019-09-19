@@ -1,5 +1,8 @@
+import { HydrangeaJS } from "../../HydrangeaJS/src/main.js";
+
 export const Component = class {
-	constructor(x, y, w, h) {
+	constructor(graphics, x, y, w, h) {
+		this.graphics = graphics;
 		this.parent = null;
 		this.name = "Empty";
 		this.x = x;
@@ -18,41 +21,41 @@ export const Component = class {
 	setup(){}
 	update(){}
 	update_sub(){
-		w = max(min_w, w);
-		h = max(min_h, h);
-		for(int i = 0; i < childs.size(); i++){
-			childs.get(i).update();
-			childs.get(i).update_sub();
+		this.w = Math.max(this.min_w, this.w);
+		this.h = Math.max(this.min_h, this.h);
+		for(let i = 0; i < this.childs.length; i++){
+			this.childs[i].update();
+			this.childs[i].update_sub();
 		}
 	}
 	draw(){};
 	draw_sub(){
-		for(int i = childs.size() - 1; i >= 0; i--){
-			pushMatrix();
-			translate(childs.get(i).x, childs.get(i).y);
-			childs.get(i).draw();
-			childs.get(i).draw_sub();
-			popMatrix();
+		for(let i = this.childs.length - 1; i >= 0; i--){
+			this.graphics.pushMatrix();
+			this.graphics.translate(this.childs[i].x, this.childs[i].y);
+			this.childs[i].draw();
+			this.childs[i].draw_sub();
+			this.graphics.popMatrix();
 		}
 	}
-	add(Component child){
-		childs.add(child);
+	add(child){
+		this.childs.push(child);
 		child.parent = this;
 		child.setup();
 		return child;
 	}
-	setMinSize(float tmp_min_w, float tmp_min_h){
-		min_w = tmp_min_w;
-		min_h = tmp_min_h;
+	setMinSize(min_w, min_h){
+		this.min_w = this.min_w;
+		this.min_h = this.min_h;
 	}
-	mouseEvent(String type, float tmp_x, float tmp_y, float start_x, float start_y){
-		if (mouseEventToChild(type, tmp_x, tmp_y, start_x, start_y)) return;
+	mouseEvent(type, x, y, start_x, start_y){
+		if (mouseEventToChild(type, x, y, start_x, start_y)) return;
 		switch(type){
 			case "HIT":
 				break;
 			case "DOWN":
-				dragStartCompX = x;
-				dragStartCompY = y;
+				this.dragStartCompX = this.x;
+				this.dragStartCompY = this.y;
 				break;
 			case "UP":
 				break;
@@ -61,36 +64,36 @@ export const Component = class {
 			case "MOVE":
 				break;
 			case "DRAG":
-				x = dragStartCompX + tmp_x - start_x;
-				y = dragStartCompY + tmp_y - start_y;
+				this.x = this.dragStartCompX + x - start_x;
+				this.y = this.dragStartCompY + y - start_y;
 				break;
 		}
 	}
-	mouseEventToChild(String type, float tmp_x, float tmp_y, float start_x, float start_y){
-		if (type.equals("UP") && (dragFlag || clickFlag)){
-			childs.get(0).mouseEvent(type, tmp_x - childs.get(0).x, tmp_y - childs.get(0).y, start_x - childs.get(0).x, start_y - childs.get(0).y);
-			dragFlag = false;
-			clickFlag = false;
+	mouseEventToChild(type, x, y, start_x, start_y){
+		if (type.equals("UP") && (this.dragFlag || this.clickFlag)){
+			this.childs[0].mouseEvent(type, x - this.childs[0].x, y - this.childs[0].y, start_x - this.childs[0].x, start_y - this.childs[0].y);
+			this.dragFlag = false;
+			this.clickFlag = false;
 		}
-		if(dragFlag) {
-			childs.get(0).mouseEvent(type, tmp_x - childs.get(0).x, tmp_y - childs.get(0).y, start_x - childs.get(0).x, start_y - childs.get(0).y);
+		if(this.dragFlag) {
+			this.childs[0].mouseEvent(type, x - this.childs[0].x, y - this.childs[0].y, start_x - this.childs[0].x, start_y - this.childs[0].y);
 			return true;
 		}
 		else{
-			for(Component c : childs){
-				if (c.checkHit(tmp_x, tmp_y)){
+			for(let c of this.childs){
+				if (c.checkHit(x, y)){
 					switch(type){
 						case "DOWN":
 							activeChilds(c);
-							c.mouseEvent(type, tmp_x - c.x, tmp_y - c.y, start_x - c.x, start_y - c.y);
-							dragFlag = true;
-							clickFlag = true;
+							c.mouseEvent(type, x - c.x, y - c.y, start_x - c.x, start_y - c.y);
+							this.dragFlag = true;
+							this.clickFlag = true;
 							break;
 						case "UP":
 						case "DRAG":
 							break;
 						default:
-							c.mouseEvent(type, tmp_x - c.x, tmp_y - c.y, start_x - c.x, start_y - c.y);
+							c.mouseEvent(type, x - c.x, y - c.y, start_x - c.x, start_y - c.y);
 							break;
 					}
 					return true;
@@ -99,50 +102,50 @@ export const Component = class {
 		}
 		return false;
 	}
-	checkHit(float px, float py){
+	checkHit(px, py){
 		if (
-			x < px &&
-			y < py &&
-			px < x + w &&
-			py < y + h
+			this.x < px &&
+			this.y < py &&
+			px < this.x + this.w &&
+			py < this.y + this.h
 		) return true;
-		for(Component c : childs){
-			if(c.checkHit(px - x, py - y)) return true;
+		for(let c of this.childs){
+			if(c.checkHit(px - this.x, py - this.y)) return true;
 		}
 		return false;
 	}
-	getHit(float px, float py){
-		for(Component c : childs){
+	getHit(px, py){
+		for(let c of this.childs){
 			if (c.checkHit(px, py)){
 				return c.getHit(px - c.x, py - c.y);
 			}
 		}
-		if (0.0f <= px && 0.0f <= py && px < w && py < h) return this;
+		if (0.0 <= px && 0.0 <= py && px < this.w && py < this.h) return this;
 		return null;
 	}
 	getRootComponent(){
-		return (parent!=null)?parent.getRootComponent():this;
+		return (this.parent!=null)?this.parent.getRootComponent():this;
 	}
-	getGrobalPos(float px, float py){
-		if(parent == null) return new PVector(x + px, y + py);
-		else return parent.getGrobalPos(x + px, y + py);
+	getGrobalPos(px, py){
+		if(this.parent == null) return HydrangeaJS.GLMath.vec2(this.x + px, this.y + py);
+		else return parent.getGrobalPos(this.x + px, this.y + py);
 	}
-	activeChilds(Component c){
-		int index = -1;
-		for(int i = 0; i < childs.size(); i++){
-			if(c == childs.get(i)) {
+	activeChilds(c){
+		let index = -1;
+		for(let i = 0; i < childs.length; i++){
+			if(c == childs[i]) {
 				index = i;
 				break;
 			}
 		}
 		if(index == -1) return;
-		for(int i = 0; i < index; i++){
+		for(let i = 0; i < index; i++){
 			swapChilds(index - i, index - i - 1);
 		}
 	}
-	swapChilds(int index1, int index2){
-		Component tmp = childs.get(index1);
-		childs.set(index1, childs.get(index2));
-		childs.set(index2, tmp);
+	swapChilds(index1, index2){
+		let tmp = childs[index1];
+		childs[index1] = childs[index2];
+		childs[index2] = tmp;
 	}
 }
