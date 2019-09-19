@@ -70,7 +70,7 @@ export const Component = class {
 		}
 	}
 	mouseEventToChild(type, x, y, start_x, start_y){
-		if (type.equals("UP") && (this.dragFlag || this.clickFlag)){
+		if (type === "UP" && (this.dragFlag || this.clickFlag)){
 			this.childs[0].mouseEvent(type, x - this.childs[0].x, y - this.childs[0].y, start_x - this.childs[0].x, start_y - this.childs[0].y);
 			this.dragFlag = false;
 			this.clickFlag = false;
@@ -127,25 +127,25 @@ export const Component = class {
 		return (this.parent!=null)?this.parent.getRootComponent():this;
 	}
 	getGrobalPos(px, py){
-		if(this.parent == null) return new HydrangeaJS.GLMath.vec2(this.x + px, this.y + py);
+		if(this.parent === null) return new HydrangeaJS.GLMath.vec2(this.x + px, this.y + py);
 		else return parent.getGrobalPos(this.x + px, this.y + py);
 	}
 	activeChilds(c){
 		let index = -1;
-		for(let i = 0; i < childs.length; i++){
-			if(c == childs[i]) {
+		for(let i = 0; i < this.childs.length; i++){
+			if(c === this.childs[i]) {
 				index = i;
 				break;
 			}
 		}
-		if(index == -1) return;
+		if(index === -1) return;
 		for(let i = 0; i < index; i++){
 			this.swapChilds(index - i, index - i - 1);
 		}
 	}
 	swapChilds(index1, index2){
-		let tmp = childs[index1];
-		childs[index1] = childs[index2];
-		childs[index2] = tmp;
+		let tmp = this.childs[index1];
+		this.childs[index1] = this.childs[index2];
+		this.childs[index2] = tmp;
 	}
 }

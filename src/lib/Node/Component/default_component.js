@@ -19,15 +19,13 @@ const ResizeBox = class extends Component {
 		this.parent.h = this.y + this.h;
 	}
 	draw(){
-		this.graphics.fill(0.0, 0.0, 0.0, 0.0);
+		this.graphics.fill(0.0 / 255.0, 0.0 / 255.0, 0.0 / 255.0, 0.0 / 255.0);
 		this.graphics.strokeWeight(2.0);
-		this.graphics.stroke(30.0, 30.0, 30.0, 255.0);
+		this.graphics.stroke(30.0 / 255.0, 30.0 / 255.0, 30.0 / 255.0, 255.0 / 255.0);
 		this.graphics.line(this.w, 0.0, 0.0, this.h);
 	}
 	checkHit(px, py){
-		return
-			super.checkHit(px, py) &&
-			(py - this.y > this.w - (px - this.x));
+		return super.checkHit(px, py) && (py - this.y > this.w - (px - this.x));
 	}
 	mouseEvent(type, x, y, start_x, start_y){
 		if (this.mouseEventToChild(type, x, y, start_x, start_y)) return;
@@ -71,9 +69,9 @@ export const DefaultComponent = class extends Component {
 	}
 	draw(){
 		this.graphics.strokeWeight(2.0);
-		this.graphics.stroke(30.0, 30.0, 30.0, 255.0);
-		this.graphics.fill(220.0, 220.0, 220.0, 178.0);
+		this.graphics.stroke(30.0 / 255.0, 30.0 / 255.0, 30.0 / 255.0, 255.0 / 255.0);
+		this.graphics.fill(220.0 / 255.0, 220.0 / 255.0, 220.0 / 255.0, 178.0 / 255.0);
 		this.graphics.rect(0.0, 0.0, this.w, this.h, 4.0);
-		this.graphics.fill(30.0, 30.0, 30.0, 255.0);
+		this.graphics.fill(30.0 / 255.0, 30.0 / 255.0, 30.0 / 255.0, 255.0 / 255.0);
 	}
 };

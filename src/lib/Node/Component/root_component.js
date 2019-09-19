@@ -32,20 +32,12 @@ export const RootComponent = class extends Component {
 		this.graphics.gapp.canvas.addEventListener("wheel", (e) => {
 			this.setZoom(e.deltaY);
 		});
-		this.graphics.gapp.canvas.addEventListener("resize", (e) => {
-			this.graphics.resize(
-				this.graphics.gapp.canvas.width,
-				this.graphics.gapp.canvas.height
-			);
-		});
-		this.graphics.resize(
-			this.graphics.gapp.canvas.width,
-			this.graphics.gapp.canvas.height
-		);
 
 		this.setup();
 	}
 	update(){
+		this.w = this.graphics.width;
+		this.h = this.graphics.height;
 		this.pmouse = this.mouse.copy();
 		this.mouse.arr[0] = (this.mouseX - this.original.arr[0]) / this.zoom;
 		this.mouse.arr[1] = (this.mouseY - this.original.arr[1]) / this.zoom;

@@ -14,7 +14,8 @@
     <script type="text/javascript" src="../dst/node_editor.js"></script>
     <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", (event) => {
-            node_editor = new Node.Applet(document.getElementById("canvas"));
+            let canvas = document.getElementById("canvas");
+            node_editor = new Node.Applet(canvas);
         });
     </script>
 </head>
