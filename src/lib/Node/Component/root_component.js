@@ -1,7 +1,7 @@
 import { Component } from "./component.js";
 import { HydrangeaJS } from "../../HydrangeaJS/src/main.js";
 
-export const RootComponent = class extends {
+export const RootComponent = class extends Component {
 	constructor(canvas) {
 		super(new HydrangeaJS.Graphics(canvas), 0, 0, canvas.width, canvas.height);
 
