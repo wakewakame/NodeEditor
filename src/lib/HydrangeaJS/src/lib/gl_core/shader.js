@@ -45,8 +45,8 @@ export const Shader = class {
     }
     loadShader(vertex_source, fragment_source) {
         // check the type of code is string
-        if (!(typeof (vertex_source) == "string" || vertex_source instanceof String)) { console.error("argument type is wrong."); return; }
-        if (!(typeof (fragment_source) == "string" || fragment_source instanceof String)) { console.error("argument type is wrong."); return; }
+        if (!(typeof (vertex_source) === "string" || vertex_source instanceof String)) { console.error("argument type is wrong."); return; }
+        if (!(typeof (fragment_source) === "string" || fragment_source instanceof String)) { console.error("argument type is wrong."); return; }
         // compile shaders
         // vertex
         let vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER); // create empty Shader object
@@ -150,7 +150,7 @@ export const Shader = class {
                 break;
             case "sampler2D":
                 if (!(x instanceof Texture)) { console.error("this class isn't GLCore.Texture."); return; }
-                if (x.texture_buffer == null) { console.error("this texture is empty."); return; }
+                if (x.texture_buffer === null) { console.error("this texture is empty."); return; }
                 this.gl.activeTexture(this.gl["TEXTURE" + this.texture_unit_num[name].toString()]);
                 this.gl.bindTexture(this.gl.TEXTURE_2D, x.texture_buffer);
                 this.gl.uniform1i(this.uniforms_location[name], this.texture_unit_num[name]);
@@ -170,7 +170,7 @@ export const Shader = class {
         let variables = {};
         for (let i of tmp_variables) {
             let tmp = i.match(word);
-            if (tmp == null) continue;
+            if (tmp === null) continue;
             if (tmp.length < 3) continue;
             variables[tmp[2]] = tmp[1];
             if (tmp.length > 3) variables[tmp[2]] += "[" + tmp[3] + "]";

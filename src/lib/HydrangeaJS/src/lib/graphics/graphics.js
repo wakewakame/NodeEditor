@@ -44,14 +44,14 @@ export const Graphics = class {
         this.current_matrix_backup[this.current_matrix_backup.length - 1].set(this.current_matrix);
     }
     popMatrix() { 
-        if (this.current_matrix_backup.length == 0) return;
+        if (this.current_matrix_backup.length === 0) return;
         this.current_matrix.set(this.current_matrix_backup.pop());
     }
     translate(x = 0, y = 0, z = 0){ this.current_matrix.translate(x, y, z); }
     scale(x = 1, y = 1, z = 1, cx = 0, cy = 0, cz = 0){ this.current_matrix.scale(x, y, z, cx, cy, cz); }
     shape(shape) {
         let w, h;
-        if (this.gapp.current_frame == null) { w = this.gapp.width; h = this.gapp.height; }
+        if (this.gapp.current_frame === null) { w = this.gapp.width; h = this.gapp.height; }
         else { w = this.gapp.current_frame.width; h = this.gapp.current_frame.height; }
         let m = new GLMath.mat4(
             2 / w, 0, 0, -1,

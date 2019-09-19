@@ -273,7 +273,7 @@
                     gdft2_1_cos.beginDraw();
                     sdft2.set("time", time);
                     sdft2.set("resolution", parseFloat(gdft2_1_cos.width), parseFloat(gdft2_1_cos.height));
-                    sdft2.set("audio", (times == 1) ? gdft1_cos.texture : gdft2_2_cos.texture);
+                    sdft2.set("audio", (times === 1) ? gdft1_cos.texture : gdft2_2_cos.texture);
                     sdft2.set("times", times);
                     g.shader(sdft2);
                     g.rect(0, 0, gdft2_1_cos.width, gdft2_1_cos.height);
@@ -282,7 +282,7 @@
                     gdft2_1_sin.beginDraw();
                     sdft2.set("time", time);
                     sdft2.set("resolution", parseFloat(gdft2_1_sin.width), parseFloat(gdft2_1_sin.height));
-                    sdft2.set("audio", (times == 1) ? gdft1_sin.texture : gdft2_2_sin.texture);
+                    sdft2.set("audio", (times === 1) ? gdft1_sin.texture : gdft2_2_sin.texture);
                     sdft2.set("times", times);
                     g.shader(sdft2);
                     g.rect(0, 0, gdft2_1_sin.width, gdft2_1_sin.height);
@@ -293,7 +293,7 @@
                     gdft2_2_cos.beginDraw();
                     sdft2.set("time", time);
                     sdft2.set("resolution", parseFloat(gdft2_2_cos.width), parseFloat(gdft2_2_cos.height));
-                    sdft2.set("audio", (times == 1) ? gdft1_cos.texture : gdft2_1_cos.texture);
+                    sdft2.set("audio", (times === 1) ? gdft1_cos.texture : gdft2_1_cos.texture);
                     sdft2.set("times", times);
                     g.shader(sdft2);
                     g.rect(0, 0, gdft2_2_cos.width, gdft2_2_cos.height);
@@ -302,7 +302,7 @@
                     gdft2_2_sin.beginDraw();
                     sdft2.set("time", time);
                     sdft2.set("resolution", parseFloat(gdft2_2_sin.width), parseFloat(gdft2_2_sin.height));
-                    sdft2.set("audio", (times == 1) ? gdft1_cos.texture : gdft2_1_sin.texture);
+                    sdft2.set("audio", (times === 1) ? gdft1_cos.texture : gdft2_1_sin.texture);
                     sdft2.set("times", times);
                     g.shader(sdft2);
                     g.rect(0, 0, gdft2_2_sin.width, gdft2_2_cos.height);

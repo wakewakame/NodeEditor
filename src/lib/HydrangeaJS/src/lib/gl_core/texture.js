@@ -16,8 +16,8 @@ export const Texture = class {
         this.height = height;
         this.pow2_width = parseInt(Math.pow(2, Math.ceil(Math.log2(this.width))));
         this.pow2_height = parseInt(Math.pow(2, Math.ceil(Math.log2(this.height))));
-        this.format = (format == null) ? this.gl.RGBA : format;
-        this.type = (type == null) ? this.gl.UNSIGNED_BYTE : type;
+        this.format = (format === null) ? this.gl.RGBA : format;
+        this.type = (type === null) ? this.gl.UNSIGNED_BYTE : type;
         if (this.texture_buffer != null) this.delete();
         this.texture_buffer = this.gl.createTexture();
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture_buffer);
@@ -30,7 +30,7 @@ export const Texture = class {
     }
     update(pixels, left = 0, top = 0, width = this.width, height = this.height) {
         if ((typeof (left) != "number") || (typeof (top) != "number") || (typeof (width) != "number") || (typeof (height) != "number")) { console.error("argument type is wrong."); return; }
-        if (this.texture_buffer == null) return;
+        if (this.texture_buffer === null) return;
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture_buffer);
         this.gl.texSubImage2D(this.gl.TEXTURE_2D, 0, left, top, width, height, this.format, this.type, pixels);
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);

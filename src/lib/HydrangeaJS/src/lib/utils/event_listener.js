@@ -4,7 +4,7 @@ export const EventListener = class {
     }
     addEventListener(name, func) {
         // check the type of name is string
-        if (!(typeof (name) == "string" || name instanceof String)) return;
+        if (!(typeof (name) === "string" || name instanceof String)) return;
         // check the type of func is function
         if (typeof (func) != "function") return;
         // check the name is registered
@@ -14,7 +14,7 @@ export const EventListener = class {
     }
     trigger(name, arg) {
         // check the type of name is string
-        if (!(typeof (name) == "string" || name instanceof String)) return;
+        if (!(typeof (name) === "string" || name instanceof String)) return;
         // check the name is registered
         if (!(name in this.events)) return;
         // process all events
@@ -24,7 +24,7 @@ export const EventListener = class {
     }
     resetEvent(name) {
         // check the type of name is string
-        if (!(typeof (name) == "string" || name instanceof String)) return;
+        if (!(typeof (name) === "string" || name instanceof String)) return;
         // check the name is registered
         if (!(name in this.events)) return;
         // reset event listener

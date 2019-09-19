@@ -25,7 +25,7 @@ export const Frame = class {
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
     }
     beginDraw() {
-        if (this.frame_buffer == null) return;
+        if (this.frame_buffer === null) return;
         this.tmp_current_frame = this.app.current_frame;
         this.app.current_frame = this;
         this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.frame_buffer);
@@ -38,7 +38,7 @@ export const Frame = class {
         this.gl.viewport(0, 0, this.app.width, this.app.height);
     }
     read(pixels, left = 0, top = 0, width = this.width, height = this.height) {
-        if (this.frame_buffer == null) return;
+        if (this.frame_buffer === null) return;
         this.beginDraw();
         this.gl.readPixels(left, top, width, height, this.texture.format, this.texture.type, pixels);
         this.endDraw();
