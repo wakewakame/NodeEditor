@@ -21,6 +21,9 @@ export const RootComponent = class extends {
 			this.mouseX = e.clientX;
 			this.mouseY = e.clientY;
 		});
+		this.graphics.gapp.canvas.addEventListener("wheel", (e) => {
+			this.setZoom(e.deltaY);
+		});
 
 		this.setup();
 	}
@@ -28,56 +31,56 @@ export const RootComponent = class extends {
 		this.pmouse = this.mouse.copy();
 		this.mouse.arr[0] = (this.mouseX - this.original.arr[0]) / this.zoom;
 		this.mouse.arr[1] = (this.mouseY - this.original.arr[1]) / this.zoom;
-		sendMouseEvent();
+		this.sendMouseEvent();
 		super.update_sub();
 	}
 	draw(){
-		pushMatrix();
-		translate(original.arr[0], original.arr[1]);
-		scale(zoom);
-		draw_sub();
-		popMatrix();
+		this.graphics.pushMatrix();
+		this.graphics.translate(this.original.arr[0], this.original.arr[1]);
+		this.graphics.scale(this.zoom, this.zoom);
+		this.draw_sub();
+		this.graphics.popMatrix();
 	};
-	setZoom(float tmp_wheel){
-		wheel -= tmp_wheel;
-		float post_zoom = exp(wheel * 0.1f);
-		original.arr[0] = mouseX + (original.arr[0] - mouseX) * (post_zoom / zoom);
-		original.arr[1] = mouseY + (original.arr[1] - mouseY) * (post_zoom / zoom);
-		zoom = post_zoom;
+	setZoom(wheel){
+		this.wheel -= wheel;
+		let post_zoom = exp(this.wheel * 0.1);
+		this.original.arr[0] = this.mouseX + (this.original.arr[0] - this.mouseX) * (post_zoom / this.zoom);
+		this.original.arr[1] = this.mouseY + (this.original.arr[1] - this.mouseY) * (post_zoom / this.zoom);
+		this.zoom = post_zoom;
 	}
 	sendMouseEvent(){
-		if ((!mousePressed) && dragFlag){
-			childs.get(0).mouseEvent("UP", mouse.arr[0] - childs.get(0).x, mouse.arr[1] - childs.get(0).y, 0, 0);
-			if(clickFlag) childs.get(0).mouseEvent("CLICK", mouse.arr[0] - childs.get(0).x, mouse.arr[1] - childs.get(0).y, 0, 0);
-			dragFlag = false;
-			clickFlag = false;
+		if ((!this.mousePressed) && this.dragFlag){
+			this.childs[0].mouseEvent("UP", this.mouse.arr[0] - this.childs[0].x, this.mouse.arr[1] - this.childs[0].y, 0, 0);
+			if(this.clickFlag) this.childs[0].mouseEvent("CLICK", this.mouse.arr[0] - this.childs[0].x, this.mouse.arr[1] - this.childs[0].y, 0, 0);
+			this.dragFlag = false;
+			this.clickFlag = false;
 		}
-		if(dragFlag){
-			childs.get(0).mouseEvent("HIT", mouse.arr[0] - childs.get(0).x, mouse.arr[1] - childs.get(0).y, 0, 0);
-			if(mouse.arr[0] != pmouse.arr[0] || mouse.arr[1] != pmouse.arr[1]){
-				childs.get(0).mouseEvent("DRAG", mouse.arr[0] - childs.get(0).x, mouse.arr[1] - childs.get(0).y, dragStartMouseX - childs.get(0).x, dragStartMouseY - childs.get(0).y);
-				clickFlag = false;
+		if(this.dragFlag){
+			this.childs[0].mouseEvent("HIT", this.mouse.arr[0] - this.childs[0].x, this.mouse.arr[1] - this.childs[0].y, 0, 0);
+			if(this.mouse.arr[0] != this.pmouse.arr[0] || this.mouse.arr[1] != this.pmouse.arr[1]){
+				this.childs[0].mouseEvent("DRAG", this.mouse.arr[0] - this.childs[0].x, this.mouse.arr[1] - this.childs[0].y, this.dragStartMouseX - this.childs[0].x, this.dragStartMouseY - this.childs[0].y);
+				this.clickFlag = false;
 			}
 		}
 		else{
-			for(Component c : childs){
-				if (c.checkHit(mouse.arr[0], mouse.arr[1])){
-					c.mouseEvent("HIT", mouse.arr[0] - c.x, mouse.arr[1] - c.y, 0, 0);
-					if(mouse.arr[0] != pmouse.arr[0] || mouse.arr[1] != pmouse.arr[1]){
-						c.mouseEvent("MOVE", mouse.arr[0] - c.x, mouse.arr[1] - c.y, 0, 0);
+			for(let c of this.childs){
+				if (c.checkHit(this.mouse.arr[0], this.mouse.arr[1])){
+					c.mouseEvent("HIT", this.mouse.arr[0] - c.x, this.mouse.arr[1] - c.y, 0, 0);
+					if(this.mouse.arr[0] != this.pmouse.arr[0] || this.mouse.arr[1] != this.pmouse.arr[1]){
+						c.mouseEvent("MOVE", this.mouse.arr[0] - c.x, this.mouse.arr[1] - c.y, 0, 0);
 					}
-					if(mousePressed && !pmousePressed){
-						activeChilds(c);
-						c.mouseEvent("DOWN", mouse.arr[0] - c.x, mouse.arr[1] - c.y, 0, 0);
-						dragStartMouseX = mouse.arr[0]; dragStartMouseY = mouse.arr[1];
-						dragFlag = true;
-						clickFlag = true;
+					if(this.mousePressed && !this.pmousePressed){
+						this.activeChilds(c);
+						c.mouseEvent("DOWN", this.mouse.arr[0] - c.x, this.mouse.arr[1] - c.y, 0, 0);
+						this.dragStartMouseX = this.mouse.arr[0]; this.dragStartMouseY = this.mouse.arr[1];
+						this.dragFlag = true;
+						this.clickFlag = true;
 					}
 					break;
 				}
 				c.update();
 			}
 		}
-		pmousePressed = mousePressed;
+		this.pmousePressed = this.mousePressed;
 	}
 };
