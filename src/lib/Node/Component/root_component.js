@@ -6,6 +6,7 @@ export const RootComponent = class extends Component {
 		super(new HydrangeaJS.Graphics(canvas), 0, 0, canvas.width, canvas.height);
 
 		this.name = "Root";
+		this.mousePressed = false;
 		this.pmousePressed = false;
 		this.dragStartMouseX = 0.0;
 		this.dragStartMouseY = 0.0;
@@ -17,6 +18,12 @@ export const RootComponent = class extends Component {
 
 		this.mouseX = 0.0;
 		this.mouseY = 0.0;
+		this.graphics.gapp.canvas.addEventListener("mousedown", (e) => {
+			this.mousePressed = true;
+		});
+		this.graphics.gapp.canvas.addEventListener("mouseup", (e) => {
+			this.mousePressed = false;
+		});
 		this.graphics.gapp.canvas.addEventListener("mousemove", (e) => {
 			this.mouseX = e.clientX;
 			this.mouseY = e.clientY;
