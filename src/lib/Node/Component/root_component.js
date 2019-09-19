@@ -24,6 +24,16 @@ export const RootComponent = class extends Component {
 		this.graphics.gapp.canvas.addEventListener("wheel", (e) => {
 			this.setZoom(e.deltaY);
 		});
+		this.graphics.gapp.canvas.addEventListener("resize", (e) => {
+			this.graphics.resize(
+				this.graphics.gapp.canvas.width,
+				this.graphics.gapp.canvas.height
+			);
+		});
+		this.graphics.resize(
+			this.graphics.gapp.canvas.width,
+			this.graphics.gapp.canvas.height
+		);
 
 		this.setup();
 	}
