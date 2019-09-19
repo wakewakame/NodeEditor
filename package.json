@@ -1,0 +1,17 @@
+{
+  "name": "NodeEditor",
+  "version": "1.0.0",
+  "description": "`$ ./node_modules/.bin/webpack`",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9"
+  }
+}
