@@ -3,8 +3,9 @@ import { HydrangeaJS } from "../../HydrangeaJS/src/main.js";
 
 export const RootComponent = class extends Component {
 	constructor(canvas) {
-		super(new HydrangeaJS.Graphics(canvas), 0, 0, canvas.width, canvas.height);
+		super(0, 0, canvas.width, canvas.height);
 
+		this.graphics = new HydrangeaJS.Graphics(canvas);
 		this.name = "Root";
 		this.mousePressed = false;
 		this.pmousePressed = false;

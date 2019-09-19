@@ -1,8 +1,8 @@
 import { Component } from "./component.js";
 
 const ResizeBox = class extends Component {
-	constructor(graphics){
-		super(graphics, 0.0, 0.0, 0.0, 0.0);
+	constructor(){
+		super(0.0, 0.0, 0.0, 0.0);
 		this.name = "ResizeBox";
 	}
 	setup(){

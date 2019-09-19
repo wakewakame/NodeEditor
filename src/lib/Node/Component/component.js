@@ -1,8 +1,8 @@
 import { HydrangeaJS } from "../../HydrangeaJS/src/main.js";
 
 export const Component = class {
-	constructor(graphics, x, y, w, h) {
-		this.graphics = graphics;
+	constructor(x, y, w, h) {
+		this.graphics = null;
 		this.parent = null;
 		this.name = "Empty";
 		this.x = x;
@@ -39,6 +39,7 @@ export const Component = class {
 	}
 	add(child){
 		this.childs.push(child);
+		child.graphics = this.graphics;
 		child.parent = this;
 		child.setup();
 		return child;
