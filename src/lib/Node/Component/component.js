@@ -17,7 +17,6 @@ export const Component = class {
 		this.dragStartCompX = 0.0;
 		this.dragStartCompY = 0.0;
 	}
-	
 	setup(){}
 	update(){}
 	update_sub(){
@@ -49,7 +48,7 @@ export const Component = class {
 		this.min_h = this.min_h;
 	}
 	mouseEvent(type, x, y, start_x, start_y){
-		if (mouseEventToChild(type, x, y, start_x, start_y)) return;
+		if (this.mouseEventToChild(type, x, y, start_x, start_y)) return;
 		switch(type){
 			case "HIT":
 				break;
@@ -84,7 +83,7 @@ export const Component = class {
 				if (c.checkHit(x, y)){
 					switch(type){
 						case "DOWN":
-							activeChilds(c);
+							this.activeChilds(c);
 							c.mouseEvent(type, x - c.x, y - c.y, start_x - c.x, start_y - c.y);
 							this.dragFlag = true;
 							this.clickFlag = true;
@@ -127,7 +126,7 @@ export const Component = class {
 		return (this.parent!=null)?this.parent.getRootComponent():this;
 	}
 	getGrobalPos(px, py){
-		if(this.parent == null) return HydrangeaJS.GLMath.vec2(this.x + px, this.y + py);
+		if(this.parent == null) return new HydrangeaJS.GLMath.vec2(this.x + px, this.y + py);
 		else return parent.getGrobalPos(this.x + px, this.y + py);
 	}
 	activeChilds(c){
@@ -140,7 +139,7 @@ export const Component = class {
 		}
 		if(index == -1) return;
 		for(let i = 0; i < index; i++){
-			swapChilds(index - i, index - i - 1);
+			this.swapChilds(index - i, index - i - 1);
 		}
 	}
 	swapChilds(index1, index2){
