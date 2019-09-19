@@ -54,7 +54,7 @@ const ResizeBox = class extends Component {
 };
 
 export const DefaultComponent = class extends Component {
-	DefaultComponent(x, y, w, h){
+	constructor(x, y, w, h){
 		super(x, y, w, h);
 		this.name = "Empty Node";
 	}
