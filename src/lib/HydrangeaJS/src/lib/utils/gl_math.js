@@ -36,7 +36,7 @@ export const GLMath = {
             this.div(this.abs());
         }
         copy() {
-            return new vec4(
+            return new vec2(
                 this.arr[0],
                 this.arr[1]
             );
@@ -93,7 +93,7 @@ export const GLMath = {
             this.div(this.abs());
         }
         copy() {
-            return new vec4(
+            return new vec3(
                 this.arr[0],
                 this.arr[1],
                 this.arr[2]
