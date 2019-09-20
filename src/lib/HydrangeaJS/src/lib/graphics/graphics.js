@@ -102,17 +102,20 @@ export const Graphics = class {
                 );
             }
         };
-        this.gshape.beginShape(this.gshape.gl.TRIANGLE_FAN);
-        this.gshape.color(this.colors.fill.r, this.colors.fill.g, this.colors.fill.b, this.colors.fill.a);
-        add_vertecis();
-        this.gshape.endShape();
-        this.shape(this.gshape);
-
-        this.gshape.beginWeightShape(this.stroke_weight, true);
-        this.gshape.color(this.colors.stroke.r, this.colors.stroke.g, this.colors.stroke.b, this.colors.stroke.a);
-        add_vertecis();
-        this.gshape.endWeightShape();
-        this.shape(this.gshape);
+        if (this.colors.fill.a !== 0.0) {
+            this.gshape.beginShape(this.gshape.gl.TRIANGLE_FAN);
+            this.gshape.color(this.colors.fill.r, this.colors.fill.g, this.colors.fill.b, this.colors.fill.a);
+            add_vertecis();
+            this.gshape.endShape();
+            this.shape(this.gshape);
+        }
+        if ((this.stroke_weight > 0.0) || (this.colors.fill.a !== 0.0)) {
+            this.gshape.beginWeightShape(this.stroke_weight, true);
+            this.gshape.color(this.colors.stroke.r, this.colors.stroke.g, this.colors.stroke.b, this.colors.stroke.a);
+            add_vertecis();
+            this.gshape.endWeightShape();
+            this.shape(this.gshape);
+        }
     }
     line(x1, y1, x2, y2) {
         this.gshape.beginWeightShape(this.stroke_weight);
