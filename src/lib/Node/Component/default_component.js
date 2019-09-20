@@ -60,12 +60,14 @@ export const DefaultComponent = class extends Component {
 		this.add(new ResizeBox());
 	}
 	update(){
+		/*
 		if(this.parent != null){
 			this.x = Math.max(0.0, this.x);
 			this.y = Math.max(0.0, this.y);
 			this.x = Math.min(this.x, this.parent.w - this.w);
 			this.y = Math.min(this.y, this.parent.h - this.h);
 		}
+		*/
 	}
 	draw(){
 		this.graphics.strokeWeight(2.0);

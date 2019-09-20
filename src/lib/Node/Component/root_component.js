@@ -53,7 +53,7 @@ export const RootComponent = class extends Component {
 	};
 	setZoom(wheel){
 		this.wheel -= wheel;
-		let post_zoom = exp(this.wheel * 0.1);
+		let post_zoom = Math.exp(this.wheel * 0.01);
 		this.original.arr[0] = this.mouseX + (this.original.arr[0] - this.mouseX) * (post_zoom / this.zoom);
 		this.original.arr[1] = this.mouseY + (this.original.arr[1] - this.mouseY) * (post_zoom / this.zoom);
 		this.zoom = post_zoom;
