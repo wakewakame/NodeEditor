@@ -22,14 +22,19 @@ export const Applet = class {
 		draggableComponent.childs[0].add(new DefaultComponent(30, 30, 100, 100));
 		draggableComponent.childs[0].add(new DefaultComponent(50, 50, 100, 100));
 
+		draggableComponent.add(new DefaultComponent(500, 10, 400, 400));
+		draggableComponent.childs[1].add(new DefaultComponent(10, 10, 100, 100));
+		draggableComponent.childs[1].add(new DefaultComponent(30, 30, 100, 100));
+		draggableComponent.childs[1].add(new DefaultComponent(50, 50, 100, 100));
+
 		this.loop();
 	}
 
 	loop() {
 		this.root.graphics.clear();
 
-		this.root.graphics.fill(1, 0, 0, 1);
-		this.root.graphics.rect(-10, -10, 1000, 1000);
+		this.root.graphics.fill(0.2, 0.2, 0.2, 1);
+		this.root.graphics.rect(0, 0, this.root.w, this.root.h);
 
 		this.root.update();
 		this.root.draw();
