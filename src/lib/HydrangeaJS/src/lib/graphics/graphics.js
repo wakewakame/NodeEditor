@@ -14,13 +14,13 @@ export const Graphics = class {
         this.shaders.normal.loadDefaultShader();
         this.shaders.texture.loadShader(this.shaders.texture.default_shader.vertex, `
                     precision highp float;
-					uniform sampler2D texture;
-					varying vec2 vUv;
-					varying vec4 vColor;
+                    uniform sampler2D texture;
+                    varying vec2 vUv;
+                    varying vec4 vColor;
 
-					void main(void){
-						gl_FragColor = texture2D(texture, vUv);
-					}
+                    void main(void){
+                        gl_FragColor = texture2D(texture, vUv);
+                    }
                 `);
         this.current_shader = this.shaders.normal;
         this.stroke_weight = 1.0;
@@ -63,22 +63,54 @@ export const Graphics = class {
         this.current_shader.set("matrix", m.arr);
         shape.drawShape(this.current_shader);
     }
-    rect(x, y, width, height) {
+    rect(x, y, width, height, r = 0.0) {
+        const add_vertecis = () => {
+            if (r === 0.0){
+                this.gshape.vertex(x, y, 0, 0, 0);
+                this.gshape.vertex(x + width, y, 0, 1, 0);
+                this.gshape.vertex(x + width, y + height, 0, 1, 1);
+                this.gshape.vertex(x, y + height, 0, 0, 1);
+            }
+            else {
+                this.gshape.vertex(x + r, y, 0, 0, 0);
+                this.gshape.vertex(x + width - r, y, 0, 1, 0);
+                for(let i = 1; i < 15; i++) this.gshape.vertex(
+                    x + width  - r + r * Math.cos(2.0 * Math.PI * (0.75 + i / 64.0)),
+                    y          + r + r * Math.sin(2.0 * Math.PI * (0.75 + i / 64.0)),
+                    0, 1, 0
+                );
+                this.gshape.vertex(x + width, y + r, 0, 1, 0);
+                this.gshape.vertex(x + width, y + height - r, 0, 1, 1);
+                for(let i = 1; i < 15; i++) this.gshape.vertex(
+                    x + width  - r + r * Math.cos(2.0 * Math.PI * (0.00 + i / 64.0)),
+                    y + height - r + r * Math.sin(2.0 * Math.PI * (0.00 + i / 64.0)),
+                    0, 1, 0
+                );
+                this.gshape.vertex(x + width - r, y + height, 0, 1, 1);
+                this.gshape.vertex(x + r, y + height, 0, 0, 1);
+                for(let i = 1; i < 15; i++) this.gshape.vertex(
+                    x          + r + r * Math.cos(2.0 * Math.PI * (0.25 + i / 64.0)),
+                    y + height - r + r * Math.sin(2.0 * Math.PI * (0.25 + i / 64.0)),
+                    0, 1, 0
+                );
+                this.gshape.vertex(x, y + height - r, 0, 0, 1);
+                this.gshape.vertex(x, y + r, 0, 0, 0);
+                for(let i = 1; i < 15; i++) this.gshape.vertex(
+                    x          + r + r * Math.cos(2.0 * Math.PI * (0.50 + i / 64.0)),
+                    y          + r + r * Math.sin(2.0 * Math.PI * (0.50 + i / 64.0)),
+                    0, 1, 0
+                );
+            }
+        };
         this.gshape.beginShape(this.gshape.gl.TRIANGLE_FAN);
         this.gshape.color(this.colors.fill.r, this.colors.fill.g, this.colors.fill.b, this.colors.fill.a);
-        this.gshape.vertex(x, y, 0, 0, 0);
-        this.gshape.vertex(x + width, y, 0, 1, 0);
-        this.gshape.vertex(x + width, y + height, 0, 1, 1);
-        this.gshape.vertex(x, y + height, 0, 0, 1);
+        add_vertecis();
         this.gshape.endShape();
         this.shape(this.gshape);
 
         this.gshape.beginWeightShape(this.stroke_weight, true);
         this.gshape.color(this.colors.stroke.r, this.colors.stroke.g, this.colors.stroke.b, this.colors.stroke.a);
-        this.gshape.vertex(x, y, 0, 0, 0);
-        this.gshape.vertex(x + width, y, 0, 1, 0);
-        this.gshape.vertex(x + width, y + height, 0, 1, 1);
-        this.gshape.vertex(x, y + height, 0, 0, 1);
+        add_vertecis();
         this.gshape.endWeightShape();
         this.shape(this.gshape);
     }
