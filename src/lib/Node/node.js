@@ -2,6 +2,7 @@ import { HydrangeaJS } from "../HydrangeaJS/src/main.js";
 import { Component } from "./Component/component.js";
 import { RootComponent } from "./Component/root_component.js";
 import { DefaultComponent } from "./Component/default_component.js";
+import { DraggableComponent } from "./Component/draggable_component.js";
 
 export const Applet = class {
 	constructor(canvas) {
@@ -13,9 +14,13 @@ export const Applet = class {
 		});
 		this.root.graphics.resize(window.innerWidth, window.innerHeight);
 
-		this.root.add(new DefaultComponent(10, 10, 100, 100));
-		this.root.add(new DefaultComponent(30, 30, 100, 100));
-		this.root.add(new DefaultComponent(50, 50, 100, 100));
+		const draggableComponent = new DraggableComponent();
+		this.root.add(draggableComponent);
+
+		draggableComponent.add(new DefaultComponent(10, 10, 400, 400));
+		draggableComponent.childs[0].add(new DefaultComponent(10, 10, 100, 100));
+		draggableComponent.childs[0].add(new DefaultComponent(30, 30, 100, 100));
+		draggableComponent.childs[0].add(new DefaultComponent(50, 50, 100, 100));
 
 		this.loop();
 	}
