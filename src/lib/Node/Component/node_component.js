@@ -12,8 +12,39 @@ export const NodeParam = class extends Component {
 		this.vector = null;
 		this.isInput = false;
 		this.size = 0.0;
+		this.hit = 0.0;
+
+		this.inner_shape = null;
+		this.outer_shape = null;
+	}
+	setup(){
+		this.update_shape();
+	}
+	update_shape(){
+		this.inner_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
+		this.outer_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
+		const weight = 6.0;
+		const div = 32;
+		this.inner_shape.beginShape(this.inner_shape.gl.TRIANGLE_FAN);
+		this.inner_shape.color(1.0, 1.0, 1.0, 1.0);
+		for(let i = 0; i < div; i++) this.inner_shape.vertex(
+			0.5 * this.size + 0.5 * (this.size - weight + this.hit * 0.5 * this.size) * Math.cos(2.0 * Math.PI * i / div),
+			0.5 * this.size + 0.5 * (this.size - weight + this.hit * 0.5 * this.size) * Math.sin(2.0 * Math.PI * i / div),
+			0.0
+		);
+		this.inner_shape.endShape();
+		this.outer_shape.beginShape(this.outer_shape.gl.TRIANGLE_FAN);
+		this.outer_shape.color(0.3, 0.3, 0.3, 1.0);
+		for(let i = 0; i < div; i++) this.outer_shape.vertex(
+			0.5 * this.size + 0.5 * (this.size + weight + this.hit * 0.5 * this.size) * Math.cos(2.0 * Math.PI * i / div),
+			0.5 * this.size + 0.5 * (this.size + weight + this.hit * 0.5 * this.size) * Math.sin(2.0 * Math.PI * i / div),
+			0.0
+		);
+		this.outer_shape.endShape();
 	}
 	canOutput(p){
+		// this is virtual function.
+		// please override this.
 		return true;
 	}
 	job() {}
@@ -27,36 +58,32 @@ export const NodeParam = class extends Component {
 				this.output.size / 2.0
 			));
 		}
+		if (this.hit != 0.0) {
+			this.hit = Math.max(0.0, this.hit - 0.25);
+			this.update_shape();
+		}
 	}
 	draw() {
+		this.graphics.shape(this.outer_shape);
+		this.graphics.shape(this.inner_shape);
 		this.graphics.strokeWeight(3.5);
 		this.graphics.stroke(0.3, 0.3, 0.3, 1.0);
-		this.graphics.fill(1.0, 1.0, 1.0, 1.0);
-		this.graphics.ellipse(this.size / 2.0, this.size / 2.0, this.size, this.size);
-		this.graphics.strokeWeight(2.0);
-		this.graphics.stroke(30.0 / 255.0, 30.0 / 255.0, 30.0 / 255.0, 255.0 / 255.0);
 		if(this.vector !== null) {
-			if(this.isInput) this.bezier(0.0, this.size / 2.0, this.vector.arr[0], this.vector.arr[1], 0.5);
-			else this.bezier(this.vector.arr[0], this.vector.arr[1], this.size, this.size / 2.0, 0.5);
+			if(this.isInput) this.bezier(0.0, this.size / 2.0, this.vector.arr[0], this.vector.arr[1]);
+			else this.bezier(this.vector.arr[0], this.vector.arr[1], this.size, this.size / 2.0);
 		}
 	}
-	bezier(x1, y1, x2, y2, p) {
-		let div = 32;
-		p *= Math.abs(x2 - x1);
-		this.graphics.strokeWeight(3.5);
-		this.graphics.stroke(0.3, 0.3, 0.3, 1.0);
-		for (let i = 0; i < div; i++) {
-			let f1 = i / div;
-			let f2 = f1 + (1.0 / div);
-			this.graphics.line(
-				Math.pow(1.0 - f1, 3.0) * x1 + 3.0 * Math.pow(1.0 - f1, 2.0) * Math.pow(f1, 1.0) * (x1 - p) + 3.0 * Math.pow(1.0 - f1, 1.0) * Math.pow(f1, 2.0) * (x2 + p) + Math.pow(f1, 3.0) * x2,
-				Math.pow(1.0 - f1, 3.0) * y1 + 3.0 * Math.pow(1.0 - f1, 2.0) * Math.pow(f1, 1.0) * y1 + 3.0 * Math.pow(1.0 - f1, 1.0) * Math.pow(f1, 2.0) * y2 + Math.pow(f1, 3.0) * y2,
-				Math.pow(1.0 - f2, 3.0) * x1 + 3.0 * Math.pow(1.0 - f2, 2.0) * Math.pow(f2, 1.0) * (x1 - p) + 3.0 * Math.pow(1.0 - f2, 1.0) * Math.pow(f2, 2.0) * (x2 + p) + Math.pow(f2, 3.0) * x2,
-				Math.pow(1.0 - f2, 3.0) * y1 + 3.0 * Math.pow(1.0 - f2, 2.0) * Math.pow(f2, 1.0) * y1 + 3.0 * Math.pow(1.0 - f2, 1.0) * Math.pow(f2, 2.0) * y2 + Math.pow(f2, 3.0) * y2
-			);
-		}
+	bezier(x1, y1, x2, y2) {
+		this.graphics.bezier(
+			x1, y1,
+			x1 - 100.0, y1,
+			x2 + 100.0, y2,
+			x2, y2,
+			16
+		);
 	}
 	mouseEvent(type, x, y, start_x, start_y) {
+		if (type === "HIT") { this.hit = Math.min(1.0, this.hit + 0.5); this.update_shape(); }
 		if (this.isInput) {
 			if (type === "UP" && this.output === null) this.vector = null;
 			if (type === "DRAG") {
@@ -129,10 +156,10 @@ export const NodeParams = class extends Component {
 export const Node = class extends SwingComponent {
 	constructor(name, x, y) {
 		super(x, y, 140.0, 0.0);
-		name = name;
+		this.name = name;
 
 		this.paramSize = 20.0;
-		this.paramGap = 12.0;
+		this.paramGap = 10.0;
 		this.finishJob = false;
 	}
 	setup(){
@@ -165,12 +192,12 @@ export const Node = class extends SwingComponent {
 	}
 	update(){
 		this.min_w = this.inputs.w + this.outputs.w;
-		this.min_h = Math.max(this.inputs.h, this.outputs.h);
+		this.min_h = Math.max(this.inputs.h, this.outputs.h) + 0.5 * this.paramSize;
 		super.update();
 	}
 	draw(){
-		this.inputs.x = 0.0 - this.paramSize / 2.0; this.inputs.y = 0.0;
-		this.outputs.x = this.w - this.paramSize / 2.0; this.outputs.y = 0.0;
+		this.inputs.x = 0.0 - 0.5 * this.paramSize; this.inputs.y = 0.5 * (this.h - this.inputs.h);
+		this.outputs.x = this.w - 0.5 * this.paramSize; this.outputs.y = 0.5 * (this.h - this.outputs.h);
 		super.draw();
 	}
 };
