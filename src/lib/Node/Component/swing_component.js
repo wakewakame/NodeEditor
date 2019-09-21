@@ -85,6 +85,7 @@ export const SwingComponent = class extends DefaultComponent {
 		this.accelerator.x *= this.param2; this.accelerator.y *= this.param2;
 		this.velocity.x += this.accelerator.x; this.velocity.y += this.accelerator.y;
 		this.x += this.velocity.x; this.y += this.velocity.y;
+		
 	}
 	mouseEvent(type, x, y, start_x, start_y) {
 		if (this.mouseEventToChild(type, x, y, start_x, start_y)) return;

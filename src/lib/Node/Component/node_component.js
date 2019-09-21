@@ -16,6 +16,7 @@ export const NodeParam = class extends Component {
 
 		this.inner_shape = null;
 		this.outer_shape = null;
+		this.arrow_shape = null;
 	}
 	setup(){
 		this.update_shape();
@@ -23,6 +24,7 @@ export const NodeParam = class extends Component {
 	update_shape(){
 		this.inner_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
 		this.outer_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
+		this.arrow_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
 		const weight = 6.0;
 		const div = 32;
 		this.inner_shape.beginShape(this.inner_shape.gl.TRIANGLE_FAN);
@@ -41,6 +43,13 @@ export const NodeParam = class extends Component {
 			0.0
 		);
 		this.outer_shape.endShape();
+		this.arrow_shape.beginShape(this.outer_shape.gl.TRIANGLE_FAN);
+		this.arrow_shape.color(0.3, 0.3, 0.3, 1.0);
+		this.arrow_shape.vertex(-20.0, 10.0, 0.0);
+		this.arrow_shape.vertex(0.0, 0.0, 0.0);
+		this.arrow_shape.vertex(-20.0, -10.0, 0.0);
+		this.arrow_shape.endShape();
+
 	}
 	canOutput(p){
 		// this is virtual function.
@@ -75,12 +84,16 @@ export const NodeParam = class extends Component {
 	}
 	bezier(x1, y1, x2, y2) {
 		this.graphics.bezier(
-			x1, y1,
-			x1 - 100.0, y1,
+			x1 - 20.0, y1,
+			x1 - 20.0 - 100.0, y1,
 			x2 + 100.0, y2,
 			x2, y2,
 			16
 		);
+		this.graphics.pushMatrix();
+		this.graphics.translate(x1, y1);
+		this.graphics.shape(this.arrow_shape);
+		this.graphics.popMatrix();
 	}
 	mouseEvent(type, x, y, start_x, start_y) {
 		if (type === "HIT") { this.hit = Math.min(1.0, this.hit + 0.5); this.update_shape(); }
