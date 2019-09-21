@@ -1,6 +1,7 @@
 import { Component } from "./component.js";
+import { HydrangeaJS } from "../../HydrangeaJS/src/main.js";
 
-const ResizeBox = class extends Component {
+export const ResizeBox = class extends Component {
 	constructor(){
 		super(0.0, 0.0, 0.0, 0.0);
 		this.name = "ResizeBox";
@@ -9,17 +10,8 @@ const ResizeBox = class extends Component {
 		this.w = this.h = 20.0;
 		this.x = this.parent.w - this.w;
 		this.y = this.parent.h - this.h;
-		this.min_w = 48.0;
-		this.min_h = 48.0;
 	}
-	update(){
-		this.x = Math.max(0.0, this.x);
-		this.y = Math.max(0.0, this.y);
-		this.x = Math.max(this.parent.min_w - this.w, this.x);
-		this.y = Math.max(this.parent.min_h, this.y);
-		this.parent.w = this.x + this.w;
-		this.parent.h = this.y + this.h;
-	}
+
 	mouseEvent(type, x, y, start_x, start_y){
 		if (this.mouseEventToChild(type, x, y, start_x, start_y)) return;
 		switch(type) {
@@ -39,18 +31,76 @@ const ResizeBox = class extends Component {
 		case "DRAG":
 			this.x = this.dragStartCompX + x - start_x;
 			this.y = this.dragStartCompY + y - start_y;
+			this.x = Math.max(0.0, this.x);
+			this.y = Math.max(0.0, this.y);
+			this.x = Math.max(this.parent.min_w - this.w, this.x);
+			this.y = Math.max(this.parent.min_h - this.h, this.y);
+			this.parent.resize(this.x + this.w, this.y + this.h);
 			break;
 		}
 	}
 };
 
 export const DefaultComponent = class extends Component {
-	constructor(x, y, w, h){
+	constructor(x, y, w, h, r = 12.0){
 		super(x, y, w, h);
 		this.name = "Empty Node";
+		this.inner_shape = null;
+		this.outer_shape = null;
+		this.r = r;
+		this.min_w = this.min_h = this.r * 2.0;
 	}
 	setup(){
 		this.add(new ResizeBox());
+		this.inner_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
+		this.outer_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
+
+		this.resize(this.w, this.h);
+	}
+	resize(w, h){
+		this.w = Math.max(this.min_w, w);
+		this.h = Math.max(this.min_h, h);
+
+		const add_vertices = (shape, x, y, width, height, r, div) => {
+			shape.vertex(x + r, y, 0, 0, 0);
+			shape.vertex(x + width - r, y, 0, 1, 0);
+			for(let i = 1; i < div; i++) shape.vertex(
+				x + width  - r + r * Math.cos(Math.PI * (1.5 + 0.5 * i / div)),
+				y          + r + r * Math.sin(Math.PI * (1.5 + 0.5 * i / div)),
+				0, 1, 0
+			);
+			shape.vertex(x + width, y + r, 0, 1, 0);
+			shape.vertex(x + width, y + height - r, 0, 1, 1);
+			for(let i = 1; i < div; i++) shape.vertex(
+				x + width  - r + r * Math.cos(Math.PI * (0.0 + 0.5 * i / div)),
+				y + height - r + r * Math.sin(Math.PI * (0.0 + 0.5 * i / div)),
+				0, 1, 0
+			);
+			shape.vertex(x + width - r, y + height, 0, 1, 1);
+			shape.vertex(x + r, y + height, 0, 0, 1);
+			for(let i = 1; i < div; i++) shape.vertex(
+				x          + r + r * Math.cos(Math.PI * (0.5 + 0.5 * i / div)),
+				y + height - r + r * Math.sin(Math.PI * (0.5 + 0.5 * i / div)),
+				0, 1, 0
+			);
+			shape.vertex(x, y + height - r, 0, 0, 1);
+			shape.vertex(x, y + r, 0, 0, 0);
+			for(let i = 1; i < div; i++) shape.vertex(
+				x          + r + r * Math.cos(Math.PI * (1.0 + 0.5 * i / div)),
+				y          + r + r * Math.sin(Math.PI * (1.0 + 0.5 * i / div)),
+				0, 1, 0
+			);
+		};
+		const weight = 6.0;
+		const div = 8;
+		this.inner_shape.beginShape(this.inner_shape.gl.TRIANGLE_FAN);
+		this.inner_shape.color(1.0, 1.0, 1.0, 1.0);
+		add_vertices(this.inner_shape, 0.0, 0.0, this.w, this.h, this.r, div);
+		this.inner_shape.endShape();
+		this.outer_shape.beginShape(this.outer_shape.gl.TRIANGLE_FAN);
+		this.outer_shape.color(0.3, 0.3, 0.3, 1.0);
+		add_vertices(this.outer_shape, -weight, -weight, this.w + weight * 2.0, this.h + weight * 2.0, this.r + weight, div);
+		this.outer_shape.endShape();
 	}
 	update(){
 		/*
@@ -63,9 +113,7 @@ export const DefaultComponent = class extends Component {
 		*/
 	}
 	draw(){
-		this.graphics.strokeWeight(1.0);
-		this.graphics.stroke(0.8, 0.8, 0.8, 0.8);
-		this.graphics.fill(0.7, 0.7, 0.7, 0.8);
-		this.graphics.rect(0.0, 0.0, this.w, this.h, 24.0);
+		this.graphics.shape(this.outer_shape);
+		this.graphics.shape(this.inner_shape);
 	}
 };

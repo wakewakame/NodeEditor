@@ -6,12 +6,16 @@ export const DraggableComponent = class extends Component {
 		this.name = "Draggable area";
 	}
 	checkHit(px, py){
+		/*
 		if (
 			0 < px &&
 			0 < py &&
 			px < this.parent.w &&
 			py < this.parent.h
 		) return true;
+		*/
+		return true;
+		
 		for(let c of this.childs){
 			if(c.checkHit(px - this.x, py - this.y)) return true;
 		}

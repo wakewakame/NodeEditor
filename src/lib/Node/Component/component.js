@@ -45,8 +45,8 @@ export const Component = class {
 		return child;
 	}
 	setMinSize(min_w, min_h){
-		this.min_w = this.min_w;
-		this.min_h = this.min_h;
+		this.min_w = min_w;
+		this.min_h = min_h;
 	}
 	mouseEvent(type, x, y, start_x, start_y){
 		if (this.mouseEventToChild(type, x, y, start_x, start_y)) return;

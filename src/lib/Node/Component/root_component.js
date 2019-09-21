@@ -30,7 +30,7 @@ export const RootComponent = class extends Component {
 			this.mouseY = e.clientY;
 		});
 		this.graphics.gapp.canvas.addEventListener("wheel", (e) => {
-			this.setZoom(e.deltaY);
+			this.setZoom(e.deltaY * 0.001);
 		});
 
 		this.setup();
@@ -53,7 +53,7 @@ export const RootComponent = class extends Component {
 	};
 	setZoom(wheel){
 		this.wheel -= wheel;
-		let post_zoom = Math.exp(this.wheel * 0.01);
+		let post_zoom = Math.exp(this.wheel);
 		this.original.arr[0] = this.mouseX + (this.original.arr[0] - this.mouseX) * (post_zoom / this.zoom);
 		this.original.arr[1] = this.mouseY + (this.original.arr[1] - this.mouseY) * (post_zoom / this.zoom);
 		this.zoom = post_zoom;

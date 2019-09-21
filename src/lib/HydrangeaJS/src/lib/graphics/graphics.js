@@ -63,7 +63,7 @@ export const Graphics = class {
         this.current_shader.set("matrix", m.arr);
         shape.drawShape(this.current_shader);
     }
-    rect(x, y, width, height, r = 0.0) {
+    rect(x, y, width, height, r = 0.0, div = 8) {
         const add_vertecis = () => {
             if (r === 0.0){
                 this.gshape.vertex(x, y, 0, 0, 0);
@@ -74,30 +74,30 @@ export const Graphics = class {
             else {
                 this.gshape.vertex(x + r, y, 0, 0, 0);
                 this.gshape.vertex(x + width - r, y, 0, 1, 0);
-                for(let i = 1; i < 15; i++) this.gshape.vertex(
-                    x + width  - r + r * Math.cos(2.0 * Math.PI * (0.75 + i / 64.0)),
-                    y          + r + r * Math.sin(2.0 * Math.PI * (0.75 + i / 64.0)),
+                for(let i = 1; i < div - 1; i++) this.gshape.vertex(
+                    x + width  - r + r * Math.cos(2.0 * Math.PI * (0.75 + i / (div * 4))),
+                    y          + r + r * Math.sin(2.0 * Math.PI * (0.75 + i / (div * 4))),
                     0, 1, 0
                 );
                 this.gshape.vertex(x + width, y + r, 0, 1, 0);
                 this.gshape.vertex(x + width, y + height - r, 0, 1, 1);
-                for(let i = 1; i < 15; i++) this.gshape.vertex(
-                    x + width  - r + r * Math.cos(2.0 * Math.PI * (0.00 + i / 64.0)),
-                    y + height - r + r * Math.sin(2.0 * Math.PI * (0.00 + i / 64.0)),
+                for(let i = 1; i < div - 1; i++) this.gshape.vertex(
+                    x + width  - r + r * Math.cos(2.0 * Math.PI * (0.00 + i / (div * 4))),
+                    y + height - r + r * Math.sin(2.0 * Math.PI * (0.00 + i / (div * 4))),
                     0, 1, 0
                 );
                 this.gshape.vertex(x + width - r, y + height, 0, 1, 1);
                 this.gshape.vertex(x + r, y + height, 0, 0, 1);
-                for(let i = 1; i < 15; i++) this.gshape.vertex(
-                    x          + r + r * Math.cos(2.0 * Math.PI * (0.25 + i / 64.0)),
-                    y + height - r + r * Math.sin(2.0 * Math.PI * (0.25 + i / 64.0)),
+                for(let i = 1; i < div - 1; i++) this.gshape.vertex(
+                    x          + r + r * Math.cos(2.0 * Math.PI * (0.25 + i / (div * 4))),
+                    y + height - r + r * Math.sin(2.0 * Math.PI * (0.25 + i / (div * 4))),
                     0, 1, 0
                 );
                 this.gshape.vertex(x, y + height - r, 0, 0, 1);
                 this.gshape.vertex(x, y + r, 0, 0, 0);
-                for(let i = 1; i < 15; i++) this.gshape.vertex(
-                    x          + r + r * Math.cos(2.0 * Math.PI * (0.50 + i / 64.0)),
-                    y          + r + r * Math.sin(2.0 * Math.PI * (0.50 + i / 64.0)),
+                for(let i = 1; i < div - 1; i++) this.gshape.vertex(
+                    x          + r + r * Math.cos(2.0 * Math.PI * (0.50 + i / (div * 4))),
+                    y          + r + r * Math.sin(2.0 * Math.PI * (0.50 + i / (div * 4))),
                     0, 1, 0
                 );
             }
