@@ -9,6 +9,8 @@ const ResizeBox = class extends Component {
 		this.w = this.h = 20.0;
 		this.x = this.parent.w - this.w;
 		this.y = this.parent.h - this.h;
+		this.min_w = 48.0;
+		this.min_h = 48.0;
 	}
 	update(){
 		this.x = Math.max(0.0, this.x);
@@ -61,10 +63,9 @@ export const DefaultComponent = class extends Component {
 		*/
 	}
 	draw(){
-		const gray = (this === this.parent.childs[0]) ? 0.9 : 0.8;
 		this.graphics.strokeWeight(1.0);
-		this.graphics.stroke(0.3, 0.3, 0.3, 1.0);
-		this.graphics.fill(gray, gray, gray, 0.8);
-		this.graphics.rect(0.0, 0.0, this.w, this.h, 16.0);
+		this.graphics.stroke(0.8, 0.8, 0.8, 0.8);
+		this.graphics.fill(0.7, 0.7, 0.7, 0.8);
+		this.graphics.rect(0.0, 0.0, this.w, this.h, 24.0);
 	}
 };

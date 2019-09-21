@@ -33,7 +33,7 @@ export const Applet = class {
 	loop() {
 		this.root.graphics.clear();
 
-		this.root.graphics.fill(0.2, 0.2, 0.2, 1);
+		this.root.graphics.fill(1.0, 1.0, 1.0, 1.0);
 		this.root.graphics.rect(0, 0, this.root.w, this.root.h);
 
 		this.root.update();
