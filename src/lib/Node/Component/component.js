@@ -128,7 +128,7 @@ export const Component = class {
 	}
 	getGrobalPos(px, py){
 		if(this.parent === null) return new HydrangeaJS.GLMath.vec2(this.x + px, this.y + py);
-		else return parent.getGrobalPos(this.x + px, this.y + py);
+		else return this.parent.getGrobalPos(this.x + px, this.y + py);
 	}
 	activeChilds(c){
 		let index = -1;

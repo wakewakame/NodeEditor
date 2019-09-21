@@ -95,11 +95,11 @@ export const DefaultComponent = class extends Component {
 		const div = 8;
 		this.inner_shape.beginShape(this.inner_shape.gl.TRIANGLE_FAN);
 		this.inner_shape.color(1.0, 1.0, 1.0, 1.0);
-		add_vertices(this.inner_shape, 0.0, 0.0, this.w, this.h, this.r, div);
+		add_vertices(this.inner_shape, weight * 0.5, weight * 0.5, this.w - weight, this.h - weight, this.r, div);
 		this.inner_shape.endShape();
 		this.outer_shape.beginShape(this.outer_shape.gl.TRIANGLE_FAN);
 		this.outer_shape.color(0.3, 0.3, 0.3, 1.0);
-		add_vertices(this.outer_shape, -weight, -weight, this.w + weight * 2.0, this.h + weight * 2.0, this.r + weight, div);
+		add_vertices(this.outer_shape, -weight * 0.5, -weight * 0.5, this.w + weight, this.h + weight, this.r + weight, div);
 		this.outer_shape.endShape();
 	}
 	update(){
