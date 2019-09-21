@@ -5,6 +5,7 @@ module.exports = {
 	entry: './src/main.js',
 	output: {
 		filename: 'node_editor.js',
-		path: path.join(__dirname, 'dst')
+		path: path.join(__dirname, 'dst'),
+		publicPath: '/dst/'
 	}
 };
