@@ -31,7 +31,7 @@ export const Applet = class {
 		draggableComponent.childs[1].add(new SwingComponent(50, 50, 0, 0, 6));
 		*/
 
-		let node1 = draggableComponent.add(new Node("hoge", 30, 30));
+		let node1 = draggableComponent.add(new Node("hoge", 30 + 170 * 0, 30));
 		node1.inputs.add(new NodeParam("hoge"));
 		node1.inputs.add(new NodeParam("hoge"));
 		node1.inputs.add(new NodeParam("hoge"));
@@ -40,17 +40,36 @@ export const Applet = class {
 		node1.outputs.add(new NodeParam("hoge"));
 		node1.outputs.add(new NodeParam("hoge"));
 
-		let node2 = draggableComponent.add(new Node("hoge", 30, 130));
+		let node2 = draggableComponent.add(new Node("hoge", 30 + 170 * 1, 30));
 		node2.inputs.add(new NodeParam("hoge"));
 		node2.outputs.add(new NodeParam("hoge"));
 		node2.outputs.add(new NodeParam("hoge"));
 
-		let node3 = draggableComponent.add(new Node("hoge", 30, 230));
+		let node3 = draggableComponent.add(new Node("hoge", 30 + 170 * 2, 30));
 		node3.inputs.add(new NodeParam("hoge"));
 		node3.inputs.add(new NodeParam("hoge"));
 		node3.outputs.add(new NodeParam("hoge"));
 		node3.outputs.add(new NodeParam("hoge"));
 		node3.outputs.add(new NodeParam("hoge"));
+
+		let node4 = draggableComponent.add(new Node("hoge", 30 + 170 * 3, 30));
+		node4.inputs.add(new NodeParam("hoge"));
+		node4.outputs.add(new NodeParam("hoge"));
+		node4.outputs.add(new NodeParam("hoge"));
+
+		let node5 = draggableComponent.add(new Node("hoge", 30 + 170 * 4, 30));
+		node5.inputs.add(new NodeParam("hoge"));
+		node5.inputs.add(new NodeParam("hoge"));
+		node5.inputs.add(new NodeParam("hoge"));
+		node5.inputs.add(new NodeParam("hoge"));
+		node5.inputs.add(new NodeParam("hoge"));
+		node5.outputs.add(new NodeParam("hoge"));
+
+		let node6 = draggableComponent.add(new Node("hoge", 30 + 170 * 5, 30));
+		node6.inputs.add(new NodeParam("hoge"));
+
+		let node7 = draggableComponent.add(new Node("hoge", 30 + 170 * 6, 30));
+		node7.outputs.add(new NodeParam("hoge"));
 
 		this.loop();
 	}

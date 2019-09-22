@@ -149,4 +149,7 @@ export const Shape = class {
         // 描画
         this.endShape();
     }
+    delete() {
+        this.gl.deleteBuffer(this.vertices_buffer);
+    }
 };

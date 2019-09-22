@@ -21,6 +21,11 @@ export const NodeParam = class extends Component {
 	setup(){
 		this.update_shape();
 	}
+	deleted(){
+		if (this.inner_shape !== null) this.inner_shape.delete();
+		if (this.outer_shape !== null) this.outer_shape.delete();
+		if (this.arrow_shape !== null) this.arrow_shape.delete();
+	}
 	update_shape(){
 		this.inner_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
 		this.outer_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
@@ -60,12 +65,18 @@ export const NodeParam = class extends Component {
 	reset() {}
 	update() {
 		if (this.output !== null) {
-			this.vector = this.output.getGrobalPos(0.0, 0.0);
-			this.vector.sub(this.getGrobalPos(0.0, 0.0));
-			this.vector.add(new HydrangeaJS.GLMath.vec2(
-				this.output.isInput ? 0.0 : this.output.size,
-				this.output.size / 2.0
-			));
+			if (this.output.graphics === null) {
+				this.output = null;
+				this.vector = null;
+			}
+			else {
+				this.vector = this.output.getGrobalPos(0.0, 0.0);
+				this.vector.sub(this.getGrobalPos(0.0, 0.0));
+				this.vector.add(new HydrangeaJS.GLMath.vec2(
+					this.output.isInput ? 0.0 : this.output.size,
+					this.output.size / 2.0
+				));
+			}
 		}
 		if (this.hit != 0.0) {
 			this.hit = Math.max(0.0, this.hit - 0.25);
@@ -196,7 +207,7 @@ export const Node = class extends SwingComponent {
 		this.finishJob = false;
 		for(let c of this.inputs.childs){
 			let p = c.output;
-			if(p === null) continue;
+			if(p === null || p.graphics === null) continue;
 			let n = p.node;
 			if(n === null) continue;
 			if(n.finishJob) n.reset();

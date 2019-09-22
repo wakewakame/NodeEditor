@@ -54,6 +54,7 @@ export const Shader = class {
         this.gl.compileShader(vertexShader); // compile Shader
         if (!this.gl.getShaderParameter(vertexShader, this.gl.COMPILE_STATUS)) { // get compile response
             let error = "vertex shader : \n" + this.gl.getShaderInfoLog(vertexShader);
+            this.gl.deleteShader(vertexShader);
             return error;
         }
         // fragment
@@ -61,8 +62,9 @@ export const Shader = class {
         this.gl.shaderSource(fragmentShader, fragment_source);
         this.gl.compileShader(fragmentShader);
         if (!this.gl.getShaderParameter(fragmentShader, this.gl.COMPILE_STATUS)) {
-            this.gl.deleteShader(vertexShader);
             let error = "fragment shader : \n" + this.gl.getShaderInfoLog(fragmentShader);
+            this.gl.deleteShader(vertexShader);
+            this.gl.deleteShader(fragmentShader);
             return error;
         }
         // bind Shader to program
@@ -74,6 +76,7 @@ export const Shader = class {
         this.gl.linkProgram(program); // link program
         if (!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)) { // get link response
             let error = "program : \n" + this.gl.getProgramInfoLog(program);
+            this.gl.deleteProgram(program);
             return error;
         }
         if (this.program != null) this.gl.deleteProgram(this.program);
@@ -176,5 +179,8 @@ export const Shader = class {
             if (tmp.length > 3) variables[tmp[2]] += "[" + tmp[3] + "]";
         }
         return variables;
+    }
+    delete(){
+        this.gl.deleteProgram(this.program);
     }
 };

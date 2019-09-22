@@ -27,7 +27,7 @@ export const Component = class {
 			this.childs[i].update_sub();
 		}
 	}
-	draw(){};
+	draw(){}
 	draw_sub(){
 		for(let i = this.childs.length - 1; i >= 0; i--){
 			this.graphics.pushMatrix();
@@ -37,12 +37,23 @@ export const Component = class {
 			this.graphics.popMatrix();
 		}
 	}
+	deleted() {}
 	add(child){
 		this.childs.push(child);
 		child.graphics = this.graphics;
 		child.parent = this;
 		child.setup();
 		return child;
+	}
+	remove(child){
+		let index = this.childs.findIndex((c) => c === child);
+		if (index !== -1) {
+			for(let c of child.childs.concat()) child.remove(c);
+			this.childs.splice(index, 1);
+			child.deleted();
+			child.graphics = null;
+			child.parent = null;
+		}
 	}
 	setMinSize(min_w, min_h){
 		this.min_w = min_w;

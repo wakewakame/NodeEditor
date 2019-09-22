@@ -57,6 +57,10 @@ export const DefaultComponent = class extends Component {
 
 		this.resize(this.w, this.h);
 	}
+	deleted(){
+		if (this.inner_shape !== null) this.inner_shape.delete();
+		if (this.outer_shape !== null) this.outer_shape.delete();
+	}
 	resize(w, h){
 		this.w = Math.max(this.min_w, w);
 		this.h = Math.max(this.min_h, h);
