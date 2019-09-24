@@ -28,20 +28,15 @@ export const FrameNode = class extends Node {
 	constructor(name, x, y) {
 		super(name, x, y);
 		this.frameBuffer = null;
+		this.inputFrameNodeParam = null;
 		this.outputFrameNodeParam = null;
 		this.previewShader = null;
 	}
 	setup(){
 		super.setup();
+		this.inputFrameNodeParam = this.inputs.add(new FrameNodeParam("input"));
 		this.outputFrameNodeParam = this.outputs.add(new FrameNodeParam("output"));
-		this.frameBuffer = new HydrangeaJS.GLCore.Frame(this.graphics.gapp, 100, 100);
-		let img = this.graphics.createTexture(0, 0);
-		img.loadImg("/examples/lena.png", () => {
-			this.frameBuffer.resize(img.width, img.height);
-			this.frameBuffer.beginDraw();
-			this.graphics.image(img, 0, img.height, img.width, 0.0 - img.height);
-			this.frameBuffer.endDraw();
-		});
+		this.frameBuffer = new HydrangeaJS.GLCore.Frame(this.graphics.gapp, 1, 1);
 		this.previewShader = this.graphics.createShader();
 		this.previewShader.loadShader(this.previewShader.default_shader.vertex, `
 			precision highp float;
@@ -76,5 +71,38 @@ export const FrameNode = class extends Node {
 		);
 		this.graphics.shape(this.inner_shape);
 		this.graphics.shader(tmp_current_shader);
+	}
+};
+
+export const TextureNode = class extends FrameNode {
+	constructor(name, img_url, x, y) {
+		super(name, x, y);
+		this.img_url = img_url;
+		this.frameBuffer = null;
+		this.outputFrameNodeParam = null;
+		this.previewShader = null;
+	}
+	setup(){
+		super.setup();
+		let img = this.graphics.createTexture(0, 0);
+		img.loadImg(this.img_url, () => {
+			this.frameBuffer.resize(img.width, img.height);
+			this.frameBuffer.beginDraw();
+			this.graphics.image(img, 0, img.height, img.width, 0.0 - img.height);
+			this.frameBuffer.endDraw();
+		});
+		this.inputs.remove(this.inputFrameNodeParam);
+	}
+	job(){
+		super.job();
+	}
+	reset(){
+		super.reset();
+	}
+	update(){
+		super.update();
+	}
+	draw(){
+		super.draw();
 	}
 };

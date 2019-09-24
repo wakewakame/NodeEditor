@@ -1,7 +1,7 @@
 import { HydrangeaJS } from "../HydrangeaJS/src/main.js";
 import { RootComponent } from "./Component/root_component.js";
 import { DraggableComponent } from "./Component/draggable_component.js";
-import { FrameNode } from "./NodeComponent/frame.js";
+import { FrameNode, TextureNode } from "./NodeComponent/frame.js";
 
 export const Applet = class {
 	constructor(canvas) {
@@ -16,7 +16,23 @@ export const Applet = class {
 		const draggableComponent = new DraggableComponent();
 		this.root.add(draggableComponent);
 
-		let node1 = draggableComponent.add(new FrameNode("hoge", 30 + 170 * 0, 30));
+		let node1 = draggableComponent.add(new TextureNode("hoge", "/examples/lena.png", 30 + 170 * 0, 30));
+		let node2 = draggableComponent.add(new FrameNode  ("hoge", 30 + 170 * 1, 30));
+
+		document.body.addEventListener('dragover', (e) => {
+			e.stopPropagation();
+			e.preventDefault();
+			e.dataTransfer.dropEffect = 'copy';
+		}, false);
+		document.body.addEventListener("drop", (e) => {
+			e.stopPropagation();
+			e.preventDefault();
+			for(let file of e.dataTransfer.files) {
+				let url = window.URL.createObjectURL(file);
+				console.log(url);
+				draggableComponent.add(new TextureNode("hoge", url, 30 + 170 * 0, 30));
+			}
+		}, false);
 
 		this.loop();
 	}
