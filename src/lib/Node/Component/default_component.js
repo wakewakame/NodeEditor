@@ -66,33 +66,41 @@ export const DefaultComponent = class extends Component {
 		this.h = Math.max(this.min_h, h);
 
 		const add_vertices = (shape, x, y, width, height, r, div) => {
-			shape.vertex(x + r, y, 0, 0, 0);
-			shape.vertex(x + width - r, y, 0, 1, 0);
+			shape.vertex(x + r, y, 0, r / width, 1.0);
+			shape.vertex(x + width - r, y, 0, (width - r) / width, 1.0);
 			for(let i = 1; i < div; i++) shape.vertex(
 				x + width  - r + r * Math.cos(Math.PI * (1.5 + 0.5 * i / div)),
 				y          + r + r * Math.sin(Math.PI * (1.5 + 0.5 * i / div)),
-				0, 1, 0
+				0,
+				0.0 + (width  - r + r * Math.cos(Math.PI * (1.5 + 0.5 * i / div))) / width,
+				1.0 - (0.0    + r + r * Math.sin(Math.PI * (1.5 + 0.5 * i / div))) / height
 			);
-			shape.vertex(x + width, y + r, 0, 1, 0);
-			shape.vertex(x + width, y + height - r, 0, 1, 1);
+			shape.vertex(x + width, y + r, 0, 1, 1.0 - r / height);
+			shape.vertex(x + width, y + height - r, 0, 1, 1.0 - (height - r) / height);
 			for(let i = 1; i < div; i++) shape.vertex(
 				x + width  - r + r * Math.cos(Math.PI * (0.0 + 0.5 * i / div)),
 				y + height - r + r * Math.sin(Math.PI * (0.0 + 0.5 * i / div)),
-				0, 1, 0
+				0,
+				0.0 + (width  - r + r * Math.cos(Math.PI * (0.0 + 0.5 * i / div))) / width,
+				1.0 - (height - r + r * Math.sin(Math.PI * (0.0 + 0.5 * i / div))) / height
 			);
-			shape.vertex(x + width - r, y + height, 0, 1, 1);
-			shape.vertex(x + r, y + height, 0, 0, 1);
+			shape.vertex(x + width - r, y + height, 0, (width - r) / width, 0.0);
+			shape.vertex(x + r, y + height, 0, r / width, 0.0);
 			for(let i = 1; i < div; i++) shape.vertex(
 				x          + r + r * Math.cos(Math.PI * (0.5 + 0.5 * i / div)),
 				y + height - r + r * Math.sin(Math.PI * (0.5 + 0.5 * i / div)),
-				0, 1, 0
+				0,
+				0.0 + (0.0    + r + r * Math.cos(Math.PI * (0.5 + 0.5 * i / div))) / width,
+				1.0 - (height - r + r * Math.sin(Math.PI * (0.5 + 0.5 * i / div))) / height
 			);
-			shape.vertex(x, y + height - r, 0, 0, 1);
-			shape.vertex(x, y + r, 0, 0, 0);
+			shape.vertex(x, y + height - r, 0, 0, 1.0 - (height - r) / height);
+			shape.vertex(x, y + r, 0, 0, 1.0 - r / height);
 			for(let i = 1; i < div; i++) shape.vertex(
 				x          + r + r * Math.cos(Math.PI * (1.0 + 0.5 * i / div)),
 				y          + r + r * Math.sin(Math.PI * (1.0 + 0.5 * i / div)),
-				0, 1, 0
+				0,
+				0.0 + (0.0        + r + r * Math.cos(Math.PI * (1.0 + 0.5 * i / div))) / width,
+				1.0 - (0.0        + r + r * Math.sin(Math.PI * (1.0 + 0.5 * i / div))) / height
 			);
 		};
 		const weight = 6.0;

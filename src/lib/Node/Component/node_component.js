@@ -185,6 +185,9 @@ export const Node = class extends SwingComponent {
 		this.paramSize = 20.0;
 		this.paramGap = 10.0;
 		this.finishJob = false;
+
+		this.inputs = null;
+		this.outputs = null;
 	}
 	setup(){
 		super.setup();

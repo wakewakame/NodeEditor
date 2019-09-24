@@ -35,7 +35,7 @@ export const Texture = class {
         this.gl.texSubImage2D(this.gl.TEXTURE_2D, 0, left, top, width, height, this.format, this.type, pixels);
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);
     }
-    loadImg(src) {
+    loadImg(src, callback = null) {
         if (this.texture_buffer != null) this.delete();
         this.texture_buffer = this.gl.createTexture();
         let img = new Image();
@@ -46,6 +46,7 @@ export const Texture = class {
             this.gl.bindTexture(this.gl.TEXTURE_2D, null);
             this.width = img.width;
             this.height = img.height;
+            if (callback !== null) callback();
         }
         img.src = src;
     }
