@@ -199,9 +199,9 @@ export const Node = class extends SwingComponent {
 		this.finishJob = true;
 		for(let c of this.inputs.childs){
 			let p = c.output;
-			if(p === null) continue;
+			if(p === null || p.graphics === null) continue;
 			let n = p.node;
-			if(n === null) continue;
+			if(n === null || n.graphics === null) continue;
 			if(!n.finishJob) n.job();
 			c.job();
 		}
@@ -212,7 +212,7 @@ export const Node = class extends SwingComponent {
 			let p = c.output;
 			if(p === null || p.graphics === null) continue;
 			let n = p.node;
-			if(n === null) continue;
+			if(n === null || n.graphics === null) continue;
 			if(n.finishJob) n.reset();
 			c.reset();
 		}

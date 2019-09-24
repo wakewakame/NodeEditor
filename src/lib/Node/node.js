@@ -20,6 +20,16 @@ export const Applet = class {
 		let node2 = draggableComponent.add(new ShaderNode  ("hoge", 30 + 170 * 1, 30));
 		let node3 = draggableComponent.add(new FrameNode  ("hoge", 30 + 170 * 2, 30));
 
+		node2.loadShader(`
+			precision highp float;
+			varying vec2 vUv;
+			varying vec4 vColor;
+
+			void main(void){
+				gl_FragColor = vec4(vUv.x, 1.0 - sqrt(vUv.x * vUv.x + vUv.y * vUv.y), vUv.y, 1.0);
+			}
+		`);
+
 		document.body.addEventListener('dragover', (e) => {
 			e.stopPropagation();
 			e.preventDefault();
