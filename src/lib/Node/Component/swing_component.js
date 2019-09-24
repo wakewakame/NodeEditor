@@ -72,10 +72,9 @@ export const SwingComponent = class extends DefaultComponent {
 	}
 	setup() {
 		super.setup();
-
 		this.target = {x: this.x, y: this.y};
-		this.childs.pop();
-		this.add(new SwingResizeBox());
+		this.remove(this.resizeBox);
+		this.resizeBox = this.add(new SwingResizeBox());
 	}
 	update() {
 		super.update();

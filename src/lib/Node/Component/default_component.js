@@ -49,9 +49,10 @@ export const DefaultComponent = class extends Component {
 		this.outer_shape = null;
 		this.r = r;
 		this.min_w = this.min_h = this.r * 2.0;
+		this.resizeBox = null;
 	}
 	setup(){
-		this.add(new ResizeBox());
+		this.resizeBox = this.add(new ResizeBox());
 		this.inner_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
 		this.outer_shape = new HydrangeaJS.GLCore.Shape(this.graphics.gapp);
 

@@ -1,6 +1,14 @@
 import { Node, NodeParam } from "../Component/node_component.js";
 import { HydrangeaJS } from "../../HydrangeaJS/src/main.js";
 
+export const ShaderNodeParam = class extends NodeParam {
+
+};
+
+export const ShaderNode = class extends Node {
+
+};
+
 export const FrameNodeParam = class extends NodeParam {
 	constructor(name) {
 		super(name);
@@ -90,6 +98,7 @@ export const TextureNode = class extends FrameNode {
 			this.frameBuffer.beginDraw();
 			this.graphics.image(img, 0, img.height, img.width, 0.0 - img.height);
 			this.frameBuffer.endDraw();
+			this.resizeBox.target.y = this.w * img.height / img.width;
 		});
 		this.inputs.remove(this.inputFrameNodeParam);
 	}
