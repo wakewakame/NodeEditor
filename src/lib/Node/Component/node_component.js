@@ -3,8 +3,9 @@ import { SwingComponent } from "./swing_component.js";
 import { HydrangeaJS } from "../../HydrangeaJS/src/main.js";
 
 export const NodeParam = class extends Component {
-	constructor(name) {
+	constructor(type, name) {
 		super(0.0, 0.0, 0.0, 0.0);
+		this.type = type;
 		this.name = name;
 
 		this.node = null;
@@ -57,9 +58,7 @@ export const NodeParam = class extends Component {
 
 	}
 	canOutput(p){
-		// this is virtual function.
-		// please override this.
-		return true;
+		return p.type === this.type;
 	}
 	job() {}
 	reset() {}

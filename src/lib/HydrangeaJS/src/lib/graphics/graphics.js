@@ -109,7 +109,7 @@ export const Graphics = class {
             this.gshape.endShape();
             this.shape(this.gshape);
         }
-        if ((this.stroke_weight > 0.0) || (this.colors.fill.a !== 0.0)) {
+        if ((this.stroke_weight > 0.0) && (this.colors.stroke.a !== 0.0)) {
             this.gshape.beginWeightShape(this.stroke_weight, true);
             this.gshape.color(this.colors.stroke.r, this.colors.stroke.g, this.colors.stroke.b, this.colors.stroke.a);
             add_vertecis();

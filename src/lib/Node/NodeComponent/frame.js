@@ -1,29 +1,6 @@
 import { Node, NodeParam } from "../Component/node_component.js";
 import { HydrangeaJS } from "../../HydrangeaJS/src/main.js";
 
-export const ShaderNodeParam = class extends NodeParam {
-	constructor(name) {
-		super(name);
-	}
-	setup(){
-		super.setup();
-	}
-	deleted(){
-		super.deleted();
-	}
-	canOutput(p){
-		return true;
-	}
-	job() {}
-	reset() {}
-	update() {
-		super.update();
-	}
-	draw() {
-		super.draw();
-	}
-};
-
 export const ShaderNode = class extends Node {
 	constructor(name, x, y) {
 		super(name, x, y);
@@ -33,42 +10,33 @@ export const ShaderNode = class extends Node {
 	}
 	setup(){
 		super.setup();
-		this.inputFrameNodeParam = this.inputs.add(new FrameNodeParam("input"));
-		this.outputFrameNodeParam = this.outputs.add(new FrameNodeParam("output"));
+		this.outputFrameNodeParam = this.outputs.add(new NodeParam("shader", "output"));
 		this.shader = this.graphics.createShader();
 		this.shader.loadDefaultShader();
 	}
 	loadShader(fragmentShader){
-		this.shader.loadShader(this.shader.default_shader.vertex, fragmentShader);
+		let result = this.shader.loadShader(this.shader.default_shader.vertex, fragmentShader);
+		if (result !== "") return result;
+		for(let i of this.inputs.childs) this.inputs.remove(i);
+		Object.keys(this.shader.uniforms_type).forEach((key) => {
+			if (key !== "matrix") this.inputs.add(new NodeParam("frame", key));
+		});
+		return "";
 	}
 	job(){
 		super.job();
+		Object.keys(this.shader.uniforms_type).forEach((key) => {
+			if (key !== "matrix") {
+				let inputs = this.inputs.childs.filter(np => np.name === key);
+				if (inputs.length === 1) {
+					let output = inputs[0].output;
+					if (output !== null) this.shader.set(key, output.node.frameBuffer.texture);
+				}
+			}
+		});
 	}
 	reset(){
 		super.reset();
-	}
-};
-
-export const FrameNodeParam = class extends NodeParam {
-	constructor(name) {
-		super(name);
-	}
-	setup(){
-		super.setup();
-	}
-	deleted(){
-		super.deleted();
-	}
-	canOutput(p){
-		return true;
-	}
-	job() {}
-	reset() {}
-	update() {
-		super.update();
-	}
-	draw() {
-		super.draw();
 	}
 };
 
@@ -76,15 +44,15 @@ export const FrameNode = class extends Node {
 	constructor(name, x, y) {
 		super(name, x, y);
 		this.frameBuffer = null;
-		this.inputFrameNodeParam = null;
-		this.outputFrameNodeParam = null;
+		this.inputShaderNodeParam = null;
+		this.outputShaderNodeParam = null;
 		this.previewShader = null;
 	}
 	setup(){
 		super.setup();
-		this.inputFrameNodeParam = this.inputs.add(new FrameNodeParam("input"));
-		this.outputFrameNodeParam = this.outputs.add(new FrameNodeParam("output"));
-		this.frameBuffer = this.graphics.createFrame(100, 100);
+		this.inputShaderNodeParam = this.inputs.add(new NodeParam("shader", "input"));
+		this.outputShaderNodeParam = this.outputs.add(new NodeParam("frame", "output"));
+		this.frameBuffer = this.graphics.createFrame(512, 512);
 		this.previewShader = this.graphics.createShader();
 		this.previewShader.loadShader(this.previewShader.default_shader.vertex, `
 			precision highp float;
@@ -107,7 +75,7 @@ export const FrameNode = class extends Node {
 		this.frameBuffer.beginDraw();
 		let tmp_current_shader = this.graphics.current_shader;
 		this.graphics.shader(shader);
-		this.graphics.rect(0, 0, this.frameBuffer.width, this.frameBuffer.height);
+		this.graphics.rect(0, this.frameBuffer.height, this.frameBuffer.width, -this.frameBuffer.height);
 		this.graphics.shader(tmp_current_shader);
 		this.frameBuffer.endDraw();
 	}
@@ -141,7 +109,7 @@ export const TextureNode = class extends FrameNode {
 		super(name, x, y);
 		this.img_url = img_url;
 		this.frameBuffer = null;
-		this.outputFrameNodeParam = null;
+		this.outputShaderNodeParam = null;
 		this.previewShader = null;
 	}
 	setup(){
@@ -154,7 +122,7 @@ export const TextureNode = class extends FrameNode {
 			this.frameBuffer.endDraw();
 			this.resizeBox.target.y = this.w * img.height / img.width;
 		});
-		this.inputs.remove(this.inputFrameNodeParam);
+		this.inputs.remove(this.inputShaderNodeParam);
 	}
 	job(){
 		super.job();
