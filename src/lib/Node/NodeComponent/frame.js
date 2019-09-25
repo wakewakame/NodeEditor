@@ -19,21 +19,28 @@ export const ShaderNode = class extends Node {
 		if (result !== "") return result;
 		for(let i of this.inputs.childs) this.inputs.remove(i);
 		Object.keys(this.shader.uniforms_type).forEach((key) => {
-			if (key !== "matrix") this.inputs.add(new NodeParam("frame", key));
+			if (key === "matrix") return;
+			let type = this.shader.uniforms_type[key];
+			if (type === "sampler2D") {
+				this.inputs.add(new NodeParam("frame", key));
+			}
+			else {
+				this.inputs.add(new NodeParam(type, key));
+			}
 		});
 		return "";
 	}
 	job(){
 		super.job();
-		Object.keys(this.shader.uniforms_type).forEach((key) => {
-			if (key !== "matrix") {
-				let inputs = this.inputs.childs.filter(np => np.name === key);
-				if (inputs.length === 1) {
-					let output = inputs[0].output;
-					if (output !== null) this.shader.set(key, output.node.frameBuffer.texture);
-				}
+		for(let c of this.inputs.childs) {
+			if(c.output === null) continue;
+			switch(c.type){
+				case "frame":
+					this.shader.set(c.name, c.output.node.frameBuffer.texture);
+					break;
 			}
-		});
+			
+		}
 	}
 	reset(){
 		super.reset();
