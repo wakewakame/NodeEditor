@@ -53,15 +53,56 @@ export const ShaderNode = class extends Node {
 		for(let c of this.inputs.childs) {
 			if(c.output === null) continue;
 			switch(c.type){
+				case "int":
+				case "float":
+					this.shader.set(
+						c.name,
+						c.output.x
+					);
+					break;
+				case "ivec2":
+				case "vec2":
+					this.shader.set(
+						c.name,
+						c.output.x,
+						c.output.y
+					);
+					break;
+				case "ivec3":
+				case "vec3":
+					this.shader.set(
+						c.name,
+						c.output.x,
+						c.output.y,
+						c.output.z
+					);
+					break;
+				case "ivec4":
+				case "vec4":
+					this.shader.set(
+						c.name,
+						c.output.x,
+						c.output.y,
+						c.output.z,
+						c.output.w
+					);
+					break;
+				case "mat2":
+				case "mat3":
+				case "mat4":
+					this.shader.set(
+						c.name,
+						c.output.mat
+					);
+					break;
 				case "frame":
-					this.shader.set(c.name, c.output.texture);
+					this.shader.set(
+						c.name,
+						c.output.texture
+					);
 					break;
 			}
-			
 		}
-	}
-	reset(){
-		super.reset();
 	}
 };
 
@@ -112,9 +153,6 @@ export const FrameNode = class extends Node {
 		this.graphics.shader(tmp_current_shader);
 		this.frameBuffer.endDraw();
 	}
-	reset(){
-		super.reset();
-	}
 	update(){
 		super.update();
 		if (this.parent.childs[0] === this)	{
@@ -144,34 +182,18 @@ export const TextureNode = class extends FrameNode {
 		this.frameBuffer = null;
 		this.outputShaderNodeParam = null;
 		this.previewShader = null;
-		this.texture = null;
 	}
 	setup(){
 		super.setup();
-		this.texture = this.graphics.createTexture(0, 0);
-		this.texture.loadImg(this.img_url, () => {
-			this.frameBuffer.resize(this.texture.width, this.texture.height);
+		let img = this.graphics.createTexture(0, 0);
+		img.loadImg(this.img_url, () => {
+			this.frameBuffer.resize(img.width, img.height);
 			this.frameBuffer.beginDraw();
-			this.graphics.image(this.texture, 0, this.texture.height, this.texture.width, 0.0 - this.texture.height);
+			this.graphics.image(img, 0, img.height, img.width, 0.0 - img.height);
 			this.frameBuffer.endDraw();
-			this.resizeBox.target.y = this.w * this.texture.height / this.texture.width;
+			this.resizeBox.target.y = this.w * img.height / img.width;
 		});
 		this.inputs.remove(this.inputShaderNodeParam);
-	}
-	deleted(){
-		super.deleted();
-		this.texture.delete();
-	}
-	job(){
-		super.job();
-	}
-	reset(){
-		super.reset();
-	}
-	update(){
-		super.update();
-	}
-	draw(){
-		super.draw();
+		img.delete();
 	}
 };
