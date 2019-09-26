@@ -26,7 +26,6 @@ export const ShaderNode = class extends Node {
 		this.outputFrameNodeParam = this.outputs.add(new ValueNodeParam("shader", "output"));
 		this.shader = this.graphics.createShader();
 		this.shader.loadDefaultShader();
-		this.outputFrameNodeParam.shader = this.shader;
 	}
 	deleted(){
 		super.deleted();
@@ -50,6 +49,7 @@ export const ShaderNode = class extends Node {
 	}
 	job(){
 		super.job();
+		this.outputFrameNodeParam.shader = this.shader;
 		for(let c of this.inputs.childs) {
 			if(c.output === null) continue;
 			switch(c.type){
@@ -119,7 +119,6 @@ export const FrameNode = class extends Node {
 		this.inputShaderNodeParam = this.inputs.add(new ValueNodeParam("shader", "input"));
 		this.outputShaderNodeParam = this.outputs.add(new ValueNodeParam("frame", "output"));
 		this.frameBuffer = this.graphics.createFrame(512, 512);
-		this.outputShaderNodeParam.texture = this.frameBuffer.texture;
 		this.previewShader = this.graphics.createShader();
 		this.previewShader.loadShader(this.previewShader.default_shader.vertex, `
 			precision highp float;
@@ -140,6 +139,7 @@ export const FrameNode = class extends Node {
 	}
 	job(){
 		super.job();
+		this.outputShaderNodeParam.texture = this.frameBuffer.texture;
 		if (
 			(this.inputs.childs.length !== 1) ||
 			(!(this.inputs.childs[0] instanceof ValueNodeParam)) ||
