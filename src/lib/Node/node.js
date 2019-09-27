@@ -44,6 +44,10 @@ export const Applet = class {
 			}
 		`);
 
+		node2.inputs.childs[0].output = node1.outputs.childs[0];
+		node3.inputs.childs[0].output = node2.outputs.childs[0];
+		draggableComponent.activeChilds(node3);
+
 		document.body.addEventListener('dragover', (e) => {
 			e.stopPropagation();
 			e.preventDefault();
