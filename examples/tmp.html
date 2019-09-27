@@ -1,0 +1,37 @@
+<html>
+<head>
+	<script type="text/javascript">
+		let start = false;
+		let time = 0.0;
+		document.addEventListener("click", (event) => {
+			if (start) return;
+			start = true;
+
+			let audio_context = new AudioContext();
+
+			let scriptProcessor = audio_context.createScriptProcessor(1024, 1, 1);
+			scriptProcessor.onaudioprocess = (e) => {
+				let input = e.inputBuffer.getChannelData(0);
+				let output = e.outputBuffer.getChannelData(0);
+				let input_sample_rate = e.inputBuffer.sampleRate;
+				let output_sample_rate = e.outputBuffer.sampleRate;
+				for (let i = 0; i < input.length; i++) {
+					output[i] = input[i] * 0.1 + Math.sin(time += 0.01) * 0.7;
+				}
+			};
+			scriptProcessor.connect(audio_context.destination);
+
+			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+			navigator.getUserMedia(
+				{ audio: true }, (stream) => {
+					let mediastreamsource = audio_context.createMediaStreamSource(stream);
+					mediastreamsource.connect(scriptProcessor);
+				}, (e) => { console.log(e); }
+			);
+		});
+	</script>
+</head>
+<body>
+	<a>画面をクリックしてください。</a>
+</body>
+</html>

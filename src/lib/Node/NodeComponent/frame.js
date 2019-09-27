@@ -4,13 +4,15 @@ import { HydrangeaJS } from "../../HydrangeaJS/src/main.js";
 export const ValueNodeParam = class extends NodeParam {
 	constructor(type, name) {
 		super(type, name);
-		this.x = 0.0;
-		this.y = 0.0;
-		this.z = 0.0;
-		this.w = 0.0;
-		this.mat = [];
-		this.texture = null;
-		this.shader = null;
+		this.value = {
+			x: 0.0,
+			y: 0.0,
+			z: 0.0,
+			w: 0.0,
+			mat: [],
+			texture: [],
+			shader: null
+		}
 	}
 };
 
@@ -49,7 +51,7 @@ export const ShaderNode = class extends Node {
 	}
 	job(){
 		super.job();
-		this.outputFrameNodeParam.shader = this.shader;
+		this.outputFrameNodeParam.value.shader = this.shader;
 		for(let c of this.inputs.childs) {
 			if(c.output === null) continue;
 			switch(c.type){
@@ -57,34 +59,34 @@ export const ShaderNode = class extends Node {
 				case "float":
 					this.shader.set(
 						c.name,
-						c.output.x
+						c.output.value.x
 					);
 					break;
 				case "ivec2":
 				case "vec2":
 					this.shader.set(
 						c.name,
-						c.output.x,
-						c.output.y
+						c.output.value.x,
+						c.output.value.y
 					);
 					break;
 				case "ivec3":
 				case "vec3":
 					this.shader.set(
 						c.name,
-						c.output.x,
-						c.output.y,
-						c.output.z
+						c.output.value.x,
+						c.output.value.y,
+						c.output.value.z
 					);
 					break;
 				case "ivec4":
 				case "vec4":
 					this.shader.set(
 						c.name,
-						c.output.x,
-						c.output.y,
-						c.output.z,
-						c.output.w
+						c.output.value.x,
+						c.output.value.y,
+						c.output.value.z,
+						c.output.value.w
 					);
 					break;
 				case "mat2":
@@ -92,13 +94,13 @@ export const ShaderNode = class extends Node {
 				case "mat4":
 					this.shader.set(
 						c.name,
-						c.output.mat
+						c.output.value.mat
 					);
 					break;
 				case "frame":
 					this.shader.set(
 						c.name,
-						c.output.texture
+						c.output.value.texture
 					);
 					break;
 			}
@@ -139,13 +141,13 @@ export const FrameNode = class extends Node {
 	}
 	job(){
 		super.job();
-		this.outputShaderNodeParam.texture = this.frameBuffer.texture;
+		this.outputShaderNodeParam.value.texture = this.frameBuffer.texture;
 		if (
 			(this.inputs.childs.length !== 1) ||
 			(!(this.inputs.childs[0] instanceof ValueNodeParam)) ||
 			(this.inputs.childs[0].output === null)
 		) return;
-		let shader = this.inputs.childs[0].output.shader;
+		let shader = this.inputs.childs[0].output.value.shader;
 		this.frameBuffer.beginDraw();
 		let tmp_current_shader = this.graphics.current_shader;
 		this.graphics.shader(shader);
@@ -195,5 +197,33 @@ export const TextureNode = class extends FrameNode {
 		});
 		this.inputs.remove(this.inputShaderNodeParam);
 		img.delete();
+	}
+};
+
+export const TimeNode = class extends Node {
+	constructor(name, x, y) {
+		super(name, x, y);
+		this.outputFloatNodeParam = null;	}
+	setup(){
+		super.setup();
+		this.outputFloatNodeParam = this.outputs.add(new ValueNodeParam("float", "output"));
+		this.outputFloatNodeParam.value.x = 0.0;
+	}
+	job(){
+		super.job();
+		this.outputFloatNodeParam.value.x += 0.01;
+	}
+	update(){
+		super.update();
+		if (this.parent.childs[0] === this)	{
+			this.reset();
+			this.job();
+		}
+	}
+	draw(){
+		super.draw();
+		this.graphics.fill(1.0, 0.0, 0.0, 1.0);
+		this.graphics.stroke(0.0, 0.0, 0.0, 0.0);
+		this.graphics.rect(10, 10, 20, 20);
 	}
 };

@@ -26,6 +26,7 @@
                 const draggableComponent = new DraggableComponent();
                 this.root.add(draggableComponent);
 
+                let node0 = draggableComponent.add(new TimeNode("hoge", 30 + 170 * 0, 130));
                 let node1 = draggableComponent.add(new TextureNode("hoge", "./lena.png", 30 + 170 * 0, 30));
                 let node2 = draggableComponent.add(new ShaderNode  ("hoge", 30 + 170 * 1, 30));
                 let node3 = draggableComponent.add(new FrameNode  ("hoge", 30 + 170 * 2, 30));
@@ -35,10 +36,15 @@
                 node2.loadShader(`
                     precision highp float;
                     uniform sampler2D texture;
+                    uniform float time;
                     varying vec2 vUv;
 
                     void main(void){
-                        gl_FragColor = texture2D(texture, vUv);
+                        vec2 p = vUv;
+                        p -= vec2(0.5);
+                        p *= mat2(cos(time), -sin(time), sin(time), cos(time));
+                        p += vec2(0.5);
+                        gl_FragColor = texture2D(texture, p);
                         gl_FragColor.rgb += vec3(vUv.x, 1.0 - sqrt(vUv.x * vUv.x + vUv.y * vUv.y), vUv.y);
                     }
                 `);
