@@ -1,4 +1,6 @@
-![demo](demo.gif)
+![demo](image/demo.gif)
+
+[https://twitter.com/hu_123456/status/1175426469339656192](https://twitter.com/hu_123456/status/1175426469339656192)
 
 # このリポジトリは2つに分離しました
 このリポジトリではブラウザ上で音声処理を行うソフトの開発を行っていました。
