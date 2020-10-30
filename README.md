@@ -1,11 +1,10 @@
-# How to build  
+![demo](demo.gif)
 
-`$ npm install`  
-`$ npm run-script build`  
+# このリポジトリは2つに分離しました
+このリポジトリではブラウザ上で音声処理を行うソフトの開発を行っていました。
+このソフトのGUI部分にはWebGLを使っていたのですが、WebGLを扱うプログラムが巨大になったため2つのリポジトリに分割することにしました。
+分離後のリポジトリは以下の場所にあります。
 
-# How to debug  
+WebGLを使った描画ライブラリ : [HydrangeaJS](https://github.com/wakewakame/HydrangeaJS)
 
-`$ npm install`  
-`$ npm run-script start`  
-next, access to `localhost:8080/examples/line.html` on your browser.  
-`
+HydrangeaJSを使った音声処理ソフト : [AudioNode](https://github.com/wakewakame/AudioNode)
